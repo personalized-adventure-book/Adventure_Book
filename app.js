@@ -9,11 +9,14 @@ en: {
     labelName: "Full Name", placeholderName: "e.g., John Smith",
     labelEmail: "Email", placeholderEmail: "john@example.com",
     labelChildName: "Child's Name", placeholderChildName: "e.g., Emily",
+    labelAge:           "Child's Age",
+    placeholderAge:     "e.g., 4",
+    labelBookLang:      "Book Language",
+    placeholderBookLang:"e.g., English, French",
+
     labelCountry: "Country Address", placeholderCountry: "e.g., United States",
     labelCity: "City Address", placeholderCity: "e.g., New York",
     labelTravel: "Travel Destination", placeholderTravel: "e.g., Grand Canyon",
-    labelAge: "Child's Age",
-    labelBookLang: "Book Language",
     addAdventure: "+ Add Adventure", createBook: "Create Book",
     dragDrop: "Drag & drop or click to select images", adventure: "Adventure",
     labelAdvName: "Name", labelAdvDesc: "Description", labelAdvImages: "Images",
@@ -26,13 +29,15 @@ es: {
     labelName: "Nombre completo", placeholderName: "ej. María González",
     labelEmail: "Correo electrónico", placeholderEmail: "maria@ejemplo.com",
     labelChildName: "Nombre del niño", placeholderChildName: "ej. Diego",
+    labelAge:           "Edad del niño",
+	placeholderAge:     "p.ej., 4",
+     labelBookLang:      "Idioma del libro",
+     placeholderBookLang:"p.ej., Español, Inglés",
+
     labelCountry: "Dirección del país", placeholderCountry: "ej. España",
     labelCity: "Dirección de la ciudad", placeholderCity: "ej. Barcelona",
     labelTravel: "Destino de viaje", placeholderTravel: "ej. Alhambra",
-    labelAge: "Edad del niño",
-    labelBookLang: "Idioma del libro",
-    placeholderBookLang: "ej. Español, Inglés",
-    placeholderBookLang: "e.g., English, French",
+    bookLang: "e.g., Español Inglés",
     addAdventure: "+ Añadir aventura", createBook: "Crear libro",
     dragDrop: "Arrastra y suelta o haz clic para seleccionar imágenes", adventure: "Aventura",
     labelAdvName: "Nombre", labelAdvDesc: "Descripción", labelAdvImages: "Imágenes",
@@ -45,12 +50,14 @@ fr: {
     labelName: "Nom complet", placeholderName: "ex. Marie Dupont",
     labelEmail: "E-mail", placeholderEmail: "marie@exemple.com",
     labelChildName: "Nom de l'enfant", placeholderChildName: "ex. Léo",
+    labelAge:           "Âge de l'enfant",
+    placeholderAge:     "ex. 4",
+    labelBookLang:      "Langue du livre",
+    placeholderBookLang:"ex. Français, Anglais",
+
     labelCountry: "Adresse du pays", placeholderCountry: "ex. France",
     labelCity: "Adresse de la ville", placeholderCity: "ex. Paris",
     labelTravel: "Destination", placeholderTravel: "ex. Forêt enchantée",
-    labelAge: "Âge de l'enfant",
-    labelBookLang: "Langue du livre",
-    placeholderBookLang: "ex. Français, Anglais",
     addAdventure: "+ Ajouter une aventure", createBook: "Créer le livre",
     dragDrop: "Glissez-déposez ou cliquez pour sélectionner des images", adventure: "Aventure",
     labelAdvName: "Nom", labelAdvDesc: "Description", labelAdvImages: "Images",
@@ -63,12 +70,14 @@ de: {
     labelName: "Vollständiger Name", placeholderName: "z.B. Max Mustermann",
     labelEmail: "E-Mail", placeholderEmail: "max@beispiel.de",
     labelChildName: "Name des Kindes", placeholderChildName: "z.B. Leon",
+    labelAge:           "Alter des Kindes",
+    placeholderAge:     "z. B. 4",
+    labelBookLang:      "Buchsprache",
+    placeholderBookLang:"z. B. Deutsch, Englisch",
+
     labelCountry: "Landadresse", placeholderCountry: "z.B. Deutschland",
     labelCity: "Stadtadresse", placeholderCity: "z.B. Berlin",
     labelTravel: "Reiseziel", placeholderTravel: "z.B. Schwarzwald",
-    labelAge: "Alter des Kindes",
-    labelBookLang: "Buchsprache",
-    placeholderBookLang: "z.B. Deutsch, Englisch",
     addAdventure: "+ Abenteuer hinzufügen", createBook: "Buch erstellen",
     dragDrop: "Ziehen & Ablegen oder klicken, um Bilder auszuwählen", adventure: "Abenteuer",
     labelAdvName: "Name", labelAdvDesc: "Beschreibung", labelAdvImages: "Bilder",
@@ -81,12 +90,14 @@ it: {
     labelName: "Nome completo", placeholderName: "es. Mario Rossi",
     labelEmail: "Email", placeholderEmail: "mario@esempio.it",
     labelChildName: "Nome del bambino", placeholderChildName: "es. Giulia",
+    labelAge:           "Età del bambino",
+    placeholderAge:     "es. 4",
+    labelBookLang:      "Lingua del libro",
+    placeholderBookLang:"es. Italiano, Inglese",
+
     labelCountry: "Indirizzo del paese", placeholderCountry: "es. Italia",
     labelCity: "Indirizzo della città", placeholderCity: "es. Roma",
     labelTravel: "Destinazione", placeholderTravel: "es. Colosseo",
-    labelAge: "Età del bambino",
-    labelBookLang: "Lingua del libro",
-    placeholderBookLang: "es. Italiano, Inglese",
     addAdventure: "+ Aggiungi avventura", createBook: "Crea libro",
     dragDrop: "Trascina e rilascia o clicca per selezionare immagini", adventure: "Avventura",
     labelAdvName: "Nome", labelAdvDesc: "Descrizione", labelAdvImages: "Immagini",
@@ -99,12 +110,14 @@ ru: {
     labelName: "Полное имя", placeholderName: "например, Иван Иванов",
     labelEmail: "Электронная почта", placeholderEmail: "ivan@primer.ru",
     labelChildName: "Имя ребенка", placeholderChildName: "например, Оля",
+    labelAge:           "Возраст ребёнка",
+    placeholderAge:     "напр., 4",
+    labelBookLang:      "Язык книги",
+    placeholderBookLang:"напр., Русский, Английский",
+
     labelCountry: "Адрес страны", placeholderCountry: "например, Россия",
     labelCity: "Адрес города", placeholderCity: "например, Москва",
     labelTravel: "Место путешествия", placeholderTravel: "например, Волшебный лес",
-    labelAge: "Возраст ребенка",
-    labelBookLang: "Язык книги",
-    placeholderBookLang: "например, Русский, Английский",
     addAdventure: "+ Добавить приключение", createBook: "Создать книгу",
     dragDrop: "Перетащите или нажмите для выбора изображений", adventure: "Приключение",
     labelAdvName: "Имя", labelAdvDesc: "Описание", labelAdvImages: "Изображения",
@@ -117,12 +130,14 @@ ar: {
     labelName: "الاسم الكامل", placeholderName: "مثال: محمد علي",
     labelEmail: "البريد الإلكتروني", placeholderEmail: "mohamed@مثال.com",
     labelChildName: "اسم الطفل", placeholderChildName: "مثال: ليلى",
+    labelAge:           "عمر الطفل",
+    placeholderAge:     "مثال: 4",
+    labelBookLang:      "لغة الكتاب",
+    placeholderBookLang:"مثال: العربية، الإنجليزية",
+
     labelCountry: "عنوان الدولة", placeholderCountry: "مثال: مصر",
     labelCity: "عنوان المدينة", placeholderCity: "مثال: القاهرة",
     labelTravel: "وجهة السفر", placeholderTravel: "مثال: الغابة المسحورة",
-    labelAge: "عمر الطفل",
-    labelBookLang: "لغة الكتاب",
-    placeholderBookLang: "مثال: العربية، الإنجليزية",
     addAdventure: "+ أضف مغامرة", createBook: "إنشاء الكتاب",
     dragDrop: "اسحب وأفلت أو انقر لاختيار الصور", adventure: "مغامرة",
     labelAdvName: "الاسم", labelAdvDesc: "الوصف", labelAdvImages: "الصور",
@@ -138,7 +153,6 @@ const t = translations[lang];
 $('langSelect').value    = lang;
 $('title').textContent   = t.title;
 $('subtitle').textContent= t.subtitle;
-
 $('labelName').textContent      = t.labelName;
 $('name').placeholder           = t.placeholderName;
 $('labelEmail').textContent     = t.labelEmail;
@@ -151,12 +165,13 @@ $('labelCity').textContent      = t.labelCity;
 $('city').placeholder           = t.placeholderCity;
 $('labelTravel').textContent    = t.labelTravel;
 $('destination').placeholder    = t.placeholderTravel;
-$('labelAge').textContent       = t.labelAge;
-$('labelBookLang').textContent  = t.labelBookLang;
-$('bookLang').placeholder       = t.placeholderBookLang;
-
 $('addAdventureBtn').textContent = t.addAdventure;
 $('createBookBtn').textContent   = t.createBook;
+$('labelAge').textContent       = t.labelAge;
+$('age').placeholder            = t.placeholderAge;
+
+$('labelBookLang').textContent  = t.labelBookLang;
+$('bookLang').placeholder       = t.placeholderBookLang;
 
 document.querySelectorAll('.adventure-section').forEach((sec, i) => {
     sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
