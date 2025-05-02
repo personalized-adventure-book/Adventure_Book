@@ -21,32 +21,20 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100vh;
-      width: 100vw;
       background: transparent;
-      overflow: hidden;
     }
 
     .container {
-      height: 100vh;
-      width: 100vw;
-      margin: 0;
-      padding: 30px;
-      overflow-y: auto; /* ✅ only scrolls inside the box */
-      border: 4px dashed var(--secondary);
-      border-radius: var(--radius);
-      box-shadow: none;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: start; /* Or center if you prefer */
-      position: relative;
-      background: 
-        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-        url("https://i.imgur.com/KWuJS80.jpeg") center/cover no-repeat;
-      background-size: cover;
-    }
-
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  overflow-y: auto;     /* let the form scroll if it grows taller than the page */
+  border: 4px dashed var(--secondary);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(rgba(255,255,255,0.9),rgba(255,255,255,0.9)),
+    url("https://i.imgur.com/KWuJS80.jpeg") center/cover no-repeat;
+}
     #langSelect {
       position:absolute; top:20px; right:20px;
       padding:8px 40px 8px 14px;

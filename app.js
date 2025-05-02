@@ -131,253 +131,187 @@ const $ = id => document.getElementById(id);
     }
   };
 
-    function apply(lang) {
-      console.log("Language applied:", lang);
-      if (!translations[lang]) lang = 'en';
-      const t = translations[lang];
-
-      $('langSelect').value = lang;
-      $('title').textContent = t.title;
-      $('subtitle').textContent = t.subtitle;
-
-      $('labelName').textContent = t.labelName;
-      $('name').placeholder = t.placeholderName;
-      $('labelEmail').textContent = t.labelEmail;
-      $('email').placeholder = t.placeholderEmail;
-      $('labelChildName').textContent = t.labelChildName;
-      $('childName').placeholder = t.placeholderChildName;
-      $('labelCountry').textContent = t.labelCountry;
-      $('country').placeholder = t.placeholderCountry;
-      $('labelCity').textContent = t.labelCity;
-      $('city').placeholder = t.placeholderCity;
-      $('labelTravel').textContent = t.labelTravel;
-      $('destination').placeholder = t.placeholderTravel;
-      $('labelAge').textContent = t.labelAge;
-      $('labelBookLang').textContent = t.labelBookLang;
-      $('bookLang').placeholder = t.placeholderBookLang || "e.g., English, French";
-
-      $('addAdventureBtn').textContent = t.addAdventure;
-      $('createBookBtn').textContent = t.createBook;
-
-      document.querySelectorAll('.adventure-section').forEach((sec, i) => {
-        sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
-
-        const span = sec.querySelector('.drop-zone span');
-        if (span) span.textContent = t.dragDrop;
-
-        const nameInput = sec.querySelector('input[name="advName"]');
-        const descInput = sec.querySelector('textarea[name="advDesc"]');
-        if (nameInput) nameInput.placeholder = t.placeholderAdvName;
-        if (descInput) descInput.placeholder = t.placeholderAdvDesc;
-
-        const labels = sec.querySelectorAll('.form-group label');
-        if (labels[0]) labels[0].textContent = t.labelAdvName;
-        if (labels[1]) labels[1].textContent = t.labelAdvDesc;
-        if (labels[2]) labels[2].textContent = t.labelAdvImages;
-      });
-    }
-
-    $('langSelect').addEventListener('change', e => apply(e.target.value));
-    window.addEventListener('DOMContentLoaded', () => {
-      const urlLang = new URLSearchParams(window.location.search).get('lang');
-      const lang = urlLang || JSON.parse('<?= JSON.stringify(lang) ?>') || 'en';
-      console.log("Language applied from server or URL:", lang);
-      apply(lang);
+  function apply(lang) {
+    if (!translations[lang]) lang = 'en';
+    const t = translations[lang];
+  
+    $('langSelect').value    = lang;
+    $('title').textContent   = t.title;
+    $('subtitle').textContent= t.subtitle;
+  
+    $('labelName').textContent      = t.labelName;
+    $('name').placeholder           = t.placeholderName;
+    $('labelEmail').textContent     = t.labelEmail;
+    $('email').placeholder          = t.placeholderEmail;
+    $('labelChildName').textContent = t.labelChildName;
+    $('childName').placeholder      = t.placeholderChildName;
+    $('labelCountry').textContent   = t.labelCountry;
+    $('country').placeholder        = t.placeholderCountry;
+    $('labelCity').textContent      = t.labelCity;
+    $('city').placeholder           = t.placeholderCity;
+    $('labelTravel').textContent    = t.labelTravel;
+    $('destination').placeholder    = t.placeholderTravel;
+    $('labelAge').textContent       = t.labelAge;
+    $('labelBookLang').textContent  = t.labelBookLang;
+    $('bookLang').placeholder       = t.placeholderBookLang;
+  
+    $('addAdventureBtn').textContent = t.addAdventure;
+    $('createBookBtn').textContent   = t.createBook;
+  
+    document.querySelectorAll('.adventure-section').forEach((sec, i) => {
+      sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
+      const span = sec.querySelector('.drop-zone span');
+      if (span) span.textContent = t.dragDrop;
+      const inputs = sec.querySelectorAll('.form-group');
+      if (inputs[0]) inputs[0].querySelector('label').textContent = t.labelAdvName;
+      if (inputs[1]) inputs[1].querySelector('label').textContent = t.labelAdvDesc;
+      if (inputs[2]) inputs[2].querySelector('label').textContent = t.labelAdvImages;
     });
-    function preview(files, container) {
-      if (!files || !files.length) return;
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        if (!file.type.startsWith("image/")) continue;
-
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          const wrap = document.createElement("div");
-          wrap.className = "image-container";
-
-          const img = document.createElement("img");
-          img.src = e.target.result;
-          img.alt = file.name;
-
-          const btn = document.createElement("button");
-          btn.className = "remove-btn";
-          btn.textContent = "×";
-          btn.onclick = () => wrap.remove();
-
-          wrap.appendChild(img);
-          wrap.appendChild(btn);
-          container.appendChild(wrap);
-        };
-
-        reader.onerror = function (err) {
-          console.error("Error reading file:", err);
-        };
-
-        reader.readAsDataURL(file);
-      }
-    }    
-    function renumber() {
-      const t = translations[$('langSelect').value] || translations.en;
-      document.querySelectorAll('.adventure-section').forEach((sec,i)=>{
-        sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i+1}`;
+  }
+  
+  document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
+  window.addEventListener('DOMContentLoaded', () => {
+    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    const initialLang = urlLang || 'en';
+    apply(initialLang);
+  });
+  
+  /* ---------- image preview ---------- */
+  function preview(files, container) {
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const wrap = document.createElement('div');
+        wrap.className = 'image-container';
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = file.name;
+        const btn = document.createElement('button');
+        btn.className = 'remove-btn';
+        btn.textContent = '×';
+        btn.onclick = () => wrap.remove();
+        wrap.append(img, btn);
+        container.append(wrap);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  
+  function renumber() {
+    const t = translations[$('langSelect').value] || translations.en;
+    document.querySelectorAll('.adventure-section').forEach((sec, i) => {
+      sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
+    });
+  }
+  
+  /* ---------- add adventure section ---------- */
+  $('addAdventureBtn').addEventListener('click', () => {
+    const idx = document.querySelectorAll('.adventure-section').length;
+    const t = translations[$('langSelect').value] || translations.en;
+    const sec = document.createElement('div');
+    sec.className = 'adventure-section';
+    sec.innerHTML = `
+      <button type="button" class="remove-adventure">×</button>
+      <div class="adventure-title">${t.adventure} ${idx + 1}</div>
+      <div class="form-group">
+        <label>${t.labelAdvName}</label>
+        <input name="advName" placeholder="${t.placeholderAdvName}" />
+      </div>
+      <div class="form-group">
+        <label>${t.labelAdvDesc}</label>
+        <textarea name="advDesc" rows="4" placeholder="${t.placeholderAdvDesc}"></textarea>
+      </div>
+      <div class="form-group">
+        <label>${t.labelAdvImages}</label>
+        <div class="drop-zone">
+          <span>${t.dragDrop}</span>
+          <input type="file" accept="image/*" multiple />
+        </div>
+        <div class="image-preview"></div>
+      </div>
+    `;
+    $('adventureList').append(sec);
+  
+    // remove button
+    sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(); };
+  
+    const dz = sec.querySelector('.drop-zone');
+    const inp = dz.querySelector('input[type=file]');
+    const prev = sec.querySelector('.image-preview');
+    inp.addEventListener('change', e => { preview(e.target.files, prev); inp.value = ''; });
+    dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
+    ['dragover','dragleave','drop'].forEach(evt => {
+      dz.addEventListener(evt, e => {
+        e.preventDefault();
+        dz.classList.toggle('drop-zone--over', evt === 'dragover');
+        if (evt === 'drop') { preview(e.dataTransfer.files, prev); inp.value = ''; }
       });
+    });
+  });
+  
+  /* ---------- handle form submission via fetch ---------- */
+  $('adventureForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    $('createBookBtn').disabled = true;
+    // validate email
+    const email = $('email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('📧 Invalid email format');
+      $('createBookBtn').disabled = false;
+      return;
     }
-
-$('addAdventureBtn').onclick = () => {
-  const idx = document.querySelectorAll('.adventure-section').length;
-  const t   = translations[$('langSelect').value] || translations.en;
-
-  const sec = document.createElement('div');
-  sec.className = 'adventure-section';
-sec.innerHTML = `
-  <button type="button" class="remove-adventure">×</button>
-  <div class="adventure-title">${t.adventure} ${idx + 1}</div>
-
-  <div class="form-group"><label>${t.labelAdvName}</label>
-    <input name="advName" placeholder="${t.placeholderAdvName}">
-  </div>
-  <div class="form-group"><label>${t.labelAdvDesc}</label>
-    <textarea name="advDesc" rows="4" placeholder="${t.placeholderAdvDesc}"></textarea>
-  </div>
-  <div class="form-group"><label>${t.labelAdvImages}</label>
-    <div class="drop-zone">
-      <span>${t.dragDrop}</span>
-      <input type="file" accept="image/*" multiple>
-    </div>
-  </div>
-  <div class="image-preview"></div>
-`;
-  $('adventureList').append(sec);
-
-  // delete
-  sec.querySelector('.remove-adventure').onclick = () => {
-    sec.remove();
-    renumber();
-  };
-
-  // drag-drop logic
-  const dz   = sec.querySelector('.drop-zone');
-  const inp  = dz.querySelector('input[type=file]');
-  const prev = sec.querySelector('.image-preview');
-
-  inp.addEventListener("change", (e) => {
-    if (e.target.files.length) {
-      preview(e.target.files, prev);
-      e.target.value = ""; // allow re-selecting same file
+    // build payload
+    const out = {
+      name: $('name').value.trim(),
+      email,
+      childName: $('childName').value.trim(),
+      age: $('age').value,
+      bookLang: $('bookLang').value.trim(),
+      country: $('country').value.trim(),
+      city: $('city').value.trim(),
+      destination: $('destination').value.trim(),
+      language: $('langSelect').value,
+      adventures: []
+    };
+    document.querySelectorAll('.adventure-section').forEach(sec => {
+      const advName = sec.querySelector('input[name=advName]').value;
+      const advDesc = sec.querySelector('textarea[name=advDesc]').value;
+      const files   = sec.querySelector('input[type=file]').files;
+      const images = [];
+      for (let f of files) {
+        // turn each File into a base64 string
+        const dataUrl = await new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload    = e => res(e.target.result);
+          r.onerror   = rej;
+          r.readAsDataURL(f);
+        });
+        images.push(dataUrl);
+      }
+      out.adventures.push({ name: advName, description: advDesc, images });
+    });
+  
+    try {
+      const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(out)
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json(); // { orderId }
+      document.body.innerHTML = `
+        <div class="container">
+          <h2>✅ Thank you, adventurer!</h2>
+          <p>Your order <b>#${data.orderId}</b> has been received.<br>
+          ✉️ A confirmation email is flying your way!</p>
+        </div>
+      `;
+    } catch (err) {
+      console.error(err);
+      alert('❌ Could not place your order. Please try again.');
+      $('createBookBtn').disabled = false;
     }
   });
   
-  dz.querySelector('span').addEventListener("click", (e) => {
-    e.stopPropagation();
-    inp.click(); // trusted user click only on the span text
-  });
-
-  ["dragover", "dragleave", "drop"].forEach((evt) => {
-    dz.addEventListener(evt, (e) => {
-      e.preventDefault();
-
-      if (evt === "dragover") dz.classList.add("drop-zone--over");
-      else dz.classList.remove("drop-zone--over");
-
-      if (evt === "drop") {
-        const dtFiles = e.dataTransfer.files;
-        if (dtFiles.length > 0) {
-          preview(dtFiles, prev);
-          inp.value = "";
-        }
-      }
-    });
-  });
-};
-
-    // Submit to Apps Script
-    $('adventureForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      $('createBookBtn').disabled = true;
-
-      const emailValue = $('email').value.trim();
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      // Remove previous error if any
-      document.querySelectorAll('.error-box').forEach(el => el.remove());
-
-      if (!emailRegex.test(emailValue)) {
-        const errorBox = document.createElement('div');
-        errorBox.className = 'error-box';
-        errorBox.style.cssText = `
-          max-width: 600px;
-          margin: 20px auto;
-          padding: 16px;
-          background: rgba(255, 0, 0, 0.1);
-          border: 2px solid #ff4d4d;
-          color: #a80000;
-          font-family: 'Comic Neue', cursive;
-          border-radius: 12px;
-          text-align: center;
-          animation: fadeIn 0.5s ease;
-        `;
-        errorBox.innerHTML = `
-          <strong>📧 Invalid Email Format</strong>
-          <p>Please enter a valid email like <i>name@example.com</i>.</p>
-        `;
-        document.querySelector('.container').prepend(errorBox);
-        // ⏱ Remove after 3 seconds
-        setTimeout(() => {
-          errorBox.style.transition = 'opacity 0.5s';
-          errorBox.style.opacity = 0;
-          setTimeout(() => errorBox.remove(), 500);
-        }, 3000);
-
-        $('createBookBtn').disabled = false;
-        return;
-      }
-
-      const out = {
-        name:        $('name').value,
-        email:       emailValue,
-        childName:   $('childName').value,
-        age:         $('age').value,        // 👈 NEW
-        bookLang:    $('bookLang').value,   // 👈 NEW
-        country:     $('country').value,
-        city:        $('city').value,
-        destination: $('destination').value,
-        language:    $('langSelect').value,
-        adventures:  []
-      };
-
-      for (const sec of document.querySelectorAll('.adventure-section')) {
-        const advName = sec.querySelector('input[name="advName"]').value;
-        const desc    = sec.querySelector('textarea[name="advDesc"]').value;
-        const files   = sec.querySelector('input[type=file]').files;
-        const images  = [];
-        for (const f of files) {
-          images.push(await new Promise((res,rej)=>{
-            const r = new FileReader();
-            r.onload = e => res(e.target.result);
-            r.onerror = rej;
-            r.readAsDataURL(f);
-          }));
-        }
-        out.adventures.push({name:advName,description:desc,images});
-      }
-
-      fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
-        method: 'POST',
-        mode:   'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(out)
-      })
-      .then(r => r.json())
-      .then(data => {
-        // same success-handler UI…
-        document.body.innerHTML = `… Thank you #${data.orderId} …`;
-      })
-      .catch(err => {
-        // same failure-handler UI…
-        console.error(err);
-        alert('❌ Could not place your order.');
-      });
-
-    });
