@@ -318,20 +318,19 @@ try {
     
         // immediately show a generic thank-you:
         document.body.innerHTML = `
-    <div class="container">
-      <h2>✅ Thank you, adventurer!</h2>
-      <p>Your order has been received.<br>
-      ✉️ Check your inbox for your confirmation email.</p>
-      <p style="margin-top: 20px;">
-        <a href="https://www.instagram.com/anything.personalized/" target="_blank"
-           style="display: inline-block; padding: 12px 20px; background: #E1306C;
-                  color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
-          📸 Follow us on Instagram
-        </a>
-      </p>
-    </div>
-        `;
-    } catch (err) {
+        <div class="container" style="text-align: center;">
+          <h2>✅ Thank you, adventurer!</h2>
+          <p>Your order has been received.<br>
+          ✉️ Check your inbox for your confirmation email.</p>
+          <p style="margin-top: 20px;">
+            <a href="https://www.instagram.com/anything.personalized/" target="_blank"
+               style="display: inline-block; padding: 12px 20px; background: #E1306C;
+                      color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
+              📸 Follow us on Instagram
+            </a>
+          </p>
+        </div>
+      `;    } catch (err) {
         console.error(err);
         alert('❌ Could not place your order. Please try again.');
         $('createBookBtn').disabled = false;
