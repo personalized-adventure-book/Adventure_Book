@@ -298,7 +298,7 @@ const $ = id => document.getElementById(id);
         const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
             method: 'POST',
             mode: 'cors',
-            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            //headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
             body: JSON.stringify(out)
           });
 
