@@ -274,28 +274,26 @@ const $ = id => document.getElementById(id);
       language: $('langSelect').value,
       adventures: []
     };
-    // ✅ Use a for…of inside your async handler:
     for (const sec of document.querySelectorAll('.adventure-section')) {
-        const files = sec.querySelector('input[type=file]').files;
-        const images = [];
+        const advName = sec.querySelector('input[name=advName]').value;
+        const advDesc = sec.querySelector('textarea[name=advDesc]').value;
+        const files   = sec.querySelector('input[type=file]').files;
+        const images  = [];
     
         for (let f of files) {
-        const dataUrl = await new Promise((res, rej) => {
+          // now this `await` is inside the surrounding async fn
+          const dataUrl = await new Promise((res, rej) => {
             const r = new FileReader();
             r.onload  = e => res(e.target.result);
             r.onerror = rej;
             r.readAsDataURL(f);
-        });
-        images.push(dataUrl);
+          });
+          images.push(dataUrl);
         }
     
-        out.adventures.push({
-        name:        sec.querySelector('input[name=advName]').value,
-        description: sec.querySelector('textarea[name=advDesc]').value,
-        images
-        });
-  }  
-
+        out.adventures.push({ name: advName, description: advDesc, images });
+      }
+    
     try {
       const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
         method: 'POST',
