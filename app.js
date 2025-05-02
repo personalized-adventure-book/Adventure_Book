@@ -292,6 +292,7 @@ const $ = id => document.getElementById(id);
       out.adventures.push({ name: advName, description: advDesc, images });
     });
   
+    
     try {
       const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
         method: 'POST',
