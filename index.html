@@ -19,9 +19,11 @@
     }
     *, *::before, *::after { box-sizing: border-box; }
     html, body {
-      margin: 0;
-      padding: 0;
-      background: transparent;
+        height: 100%;
+        margin: 0;
+        background: url('images/bg.jpg') no-repeat center center fixed;
+        background-size: cover;
+
     }
 
     .container {
@@ -31,9 +33,8 @@
   overflow-y: auto;     /* let the form scroll if it grows taller than the page */
   border: 4px dashed var(--secondary);
   border-radius: var(--radius);
-  background:
-    linear-gradient(rgba(255,255,255,0.9),rgba(255,255,255,0.9)),
-    url("https://i.imgur.com/KWuJS80.jpeg") center/cover no-repeat;
+  background: transparent;
+
 }
     #langSelect {
       position:absolute; top:20px; right:20px;
