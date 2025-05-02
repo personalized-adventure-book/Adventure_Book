@@ -27,15 +27,23 @@
     }
 
     .container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 30px;
-  overflow-y: auto;     /* let the form scroll if it grows taller than the page */
-  border: 4px dashed var(--secondary);
-  border-radius: var(--radius);
-  background: transparent;
+        position: relative;          /* make sure the overlay sits inside */
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 30px;
+        overflow-y: auto;
+        border: 4px dashed var(--secondary);
+        border-radius: var(--radius);
+        background: 
+            /* white at 80% opacity: */
+            rgba(255, 255, 255, 0.8);
+        /* keep your background image behind the white overlay: */
+        background-image: url('images/bg.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+     }
 
-}
     #langSelect {
       position:absolute; top:20px; right:20px;
       padding:8px 40px 8px 14px;
