@@ -324,7 +324,7 @@ try {
       ✉️ Check your inbox for your confirmation email.</p>
       <p style="margin-top: 20px;">
         <a href="https://www.instagram.com/anything.personalized/" target="_blank"
-           style="display: inline-block; padding: 12px 20px; background: #E1306C;
+           style="display: inline-block; align-items: center; padding: 12px 20px; background: #E1306C;
                   color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
           📸 Follow us on Instagram
         </a>
