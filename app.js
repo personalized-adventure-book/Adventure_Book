@@ -302,19 +302,18 @@ const $ = id => document.getElementById(id);
             body: JSON.stringify(out)
           });
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json(); // { orderId }
-      document.body.innerHTML = `
-        <div class="container">
-          <h2>✅ Thank you, adventurer!</h2>
-          <p>Your order <b>#${data.orderId}</b> has been received.<br>
-          ✉️ A confirmation email is flying your way!</p>
-        </div>
-      `;
-    } catch (err) {
-      console.error(err);
-      alert('❌ Could not place your order. Please try again.');
-      $('createBookBtn').disabled = false;
-    }
-  });
-  
+    // Since we can't read the response in no-cors mode,
+    // just show a generic thank-you screen:
+    document.body.innerHTML = `
+      <div class="container">
+        <h2>✅ Thank you, adventurer!</h2>
+        <p>Your order has been received.<br>
+        ✉️ Check your inbox for a confirmation email.</p>
+      </div>
+    `;
+  } catch (err) {
+    console.error(err);
+    alert('❌ Could not place your order. Please try again.');
+    $('createBookBtn').disabled = false;
+  }
+});  
