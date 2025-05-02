@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Personalized Adventure Book</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary:   #ff7f50;
+      --secondary: #6fa3ef;
+      --accent:    #ffda6a;
+      --radius:    12px;
+      --gap:       20px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .container {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 30px;
+      overflow-y: auto; /* ✅ only scrolls inside the box */
+      border: 4px dashed var(--secondary);
+      border-radius: var(--radius);
+      box-shadow: none;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: start; /* Or center if you prefer */
+      position: relative;
+      background: 
+        linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+        url("https://i.imgur.com/KWuJS80.jpeg") center/cover no-repeat;
+      background-size: cover;
+    }
+
+    #langSelect {
+      position:absolute; top:20px; right:20px;
+      padding:8px 40px 8px 14px;
+      background:var(--secondary); color:#fff;
+      border:2px solid var(--primary);
+      border-radius:var(--radius);
+      font-size:1.2rem; font-weight:bold;
+      cursor:pointer;
+    }
+    h1 {
+      text-align:center; font-size:3rem;
+      margin:60px 0 var(--gap);
+      background:linear-gradient(90deg,var(--primary),var(--secondary));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .subtitle {
+      text-align:center; margin-bottom:var(--gap);
+      color:var(--secondary); font-size:1.2rem;
+    }
+    form { display:flex; flex-direction:column; gap:var(--gap); }
+    .form-row {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:var(--gap);
+    }
+    .form-group { display:flex; flex-direction:column; gap:8px; }
+    label { font-weight:bold; color:var(--primary); }
+    input, textarea {
+      padding:10px; border:2px solid var(--secondary);
+      border-radius:var(--radius); outline:none; font-size:1rem;
+    }
+    #addAdventureBtn, #createBookBtn {
+      align-self:center; padding:12px 24px;
+      background:var(--primary); color:#fff; border:none;
+      border-radius:var(--radius); font-size:1.1rem; cursor:pointer;
+    }
+    #addAdventureBtn:hover, #createBookBtn:hover {
+      background:var(--secondary);
+    }
+    .adventure-section {
+      margin: 30px 0px;
+      position:relative; background:var(--accent);
+      padding:var(--gap); border:2px solid var(--secondary);
+      border-radius:var(--radius);
+      display:flex; flex-direction:column; gap:var(--gap);
+    }
+    .remove-adventure {
+      position:absolute; top:8px; right:8px;
+      width:24px; height:24px; background:var(--primary);
+      border:none; border-radius:50%; color:#fff; cursor:pointer;
+    }
+    .adventure-title {
+      margin:0; font-size:1.4rem; color:var(--secondary);
+    }
+    .drop-zone {
+      position:relative; padding:20px;
+      border:2px dashed var(--secondary);
+      border-radius:var(--radius); text-align:center;
+      cursor:pointer; transition:background .2s;
+    }
+    .drop-zone--over { background:var(--accent); }
+    .image-preview {
+      display:flex; flex-wrap:wrap; gap:10px;
+      margin-top:10px; max-height:150px; overflow-y:auto;
+    }
+    .image-container {
+      position:relative; border-radius:var(--radius);
+    }
+    .image-container img {
+      max-width: 120px;
+      height: auto;
+      border-radius: var(--radius);
+      display: block;
+    }
+    .remove-btn {
+      position:absolute; top:4px; right:4px;
+      width:22px; height:22px; background:var(--primary);
+      border:none; border-radius:50%; color:#fff;
+      font-size:14px; cursor:pointer;
+    }
+    .drop-zone input {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <select id="langSelect">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="it">Italiano</option>
+      <option value="ru">Русский</option>
+      <option value="ar">العربية</option>
+    </select>
+
+    <h1 id="title"></h1>
+    <p class="subtitle" id="subtitle"></p>
+
+    <!-- Modified Form HTML -->
+    <form id="adventureForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label id="labelName" for="name"></label>
+          <input id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label id="labelEmail" for="email"></label>
+          <input id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label id="labelChildName" for="childName"></label>
+          <input id="childName" name="childName" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label id="labelAge" for="age"></label>
+          <input id="age" name="age" placeholder="e.g., 4" type="number" min="1" required />
+        </div>
+        <div class="form-group">
+          <label id="labelBookLang" for="bookLang"></label>
+          <input id="bookLang" name="bookLang" placeholder="e.g., English, French" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label id="labelCountry" for="country"></label>
+          <input id="country" name="country" required />
+        </div>
+        <div class="form-group">
+          <label id="labelCity" for="city"></label>
+          <input id="city" name="city" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label id="labelTravel" for="destination"></label>
+        <input id="destination" name="destination" required />
+      </div>
+
+      <div id="adventureList"></div>
+
+      <button type="button" id="addAdventureBtn"></button>
+      <button type="submit" id="createBookBtn"></button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
