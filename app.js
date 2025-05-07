@@ -260,7 +260,7 @@ dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
     dz.addEventListener(evt, e => {
     e.preventDefault();
     dz.classList.toggle('drop-zone--over', evt === 'dragover');
-    if (evt === 'drop') { preview(e.dataTransfer.files, prev); inp.value = ''; }
+    //if (evt === 'drop') { preview(e.dataTransfer.files, prev); inp.value = ''; }
     });
 });
 });
