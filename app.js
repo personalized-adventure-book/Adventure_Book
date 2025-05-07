@@ -281,10 +281,12 @@ function apply(lang) {
   });
   
   /* ---------- handle form submission via fetch ---------- */
-  $('adventureForm').addEventListener('submit', async e => {
+// ---------- handle form submission via google.script.run ----------
+$('adventureForm').addEventListener('submit', e => {
     e.preventDefault();
     $('createBookBtn').disabled = true;
   
+    // validate email
     const email = $('email').value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       alert('📧 Invalid email format');
@@ -292,6 +294,7 @@ function apply(lang) {
       return;
     }
   
+    // build your payload object
     const out = {
       name: $('name').value.trim(),
       email,
@@ -305,34 +308,53 @@ function apply(lang) {
       adventures: []
     };
   
+    // gather each adventure section
     document.querySelectorAll('.adventure-section').forEach(sec => {
-      const advName = sec.querySelector('input[name=advName]').value;
-      const advDesc = sec.querySelector('textarea[name=advDesc]').value;
-      const files   = sec.querySelector('input[type=file]').files;
-      const images = [];
+      const advName  = sec.querySelector('input[name=advName]').value;
+      const advDesc  = sec.querySelector('textarea[name=advDesc]').value;
+      const files    = sec.querySelector('input[type=file]').files;
+      const images   = [];
+  
+      // convert FileList into an array of File objects
       for (let f of files) images.push(f);
-      out.adventures.push({ name: advName, description: advDesc, images });
+  
+      out.adventures.push({
+        name:        advName,
+        description: advDesc,
+        images
+      });
     });
   
-    try {
-      const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(out)
-      });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
-      document.body.innerHTML = `
-        <div class="container" style="text-align:center;">
-          <h2>✅ Thank you, adventurer!</h2>
-          <p>Your order <b>#${data.orderId}</b> has been received.<br>✉️ A confirmation email is flying your way!</p>
-        </div>
-      `;
-    } catch (err) {
-      console.error(err);
-      alert('❌ Could not place your order. Please try again.');
-      $('createBookBtn').disabled = false;
-    }
+    // call your server‐side function
+    google.script.run
+      .withSuccessHandler(orderId => {
+        // show the thank-you screen
+        document.body.innerHTML = `
+          <div class="container" style="text-align:center;">
+            <h2>✅ Thank you, adventurer!</h2>
+            <p>Your order <b>#${orderId}</b> has been received.<br>
+               ✉️ A confirmation email is flying your way!</p>
+            <p style="margin-top:20px;">
+              <a href="https://www.instagram.com/anything.personalized/"
+                 target="_blank"
+                 style="display:inline-block;
+                        padding:12px 20px;
+                        background:#E1306C;
+                        color:#fff;
+                        border-radius:8px;
+                        font-weight:bold;
+                        text-decoration:none;">
+                📸 Follow us on Instagram
+              </a>
+            </p>
+          </div>
+        `;
+      })
+      .withFailureHandler(err => {
+        console.error(err);
+        alert('❌ Could not place your order. Please try again.');
+        $('createBookBtn').disabled = false;
+      })
+      .processOrder(out);
   });
   
