@@ -146,215 +146,193 @@ ar: {
 }
 };
 
-
 function apply(lang) {
-    if (!translations[lang]) lang = 'en';
-    const t = translations[lang];
-  
-    $('langSelect').value    = lang;
-    $('title').textContent   = t.title;
-    $('subtitle').textContent= t.subtitle;
-  
-    $('labelName').textContent      = t.labelName;
-    $('name').placeholder           = t.placeholderName;
-    $('labelEmail').textContent     = t.labelEmail;
-    $('email').placeholder          = t.placeholderEmail;
-    $('labelChildName').textContent = t.labelChildName;
-    $('childName').placeholder      = t.placeholderChildName;
-    $('labelCountry').textContent   = t.labelCountry;
-    $('country').placeholder        = t.placeholderCountry;
-    $('labelCity').textContent      = t.labelCity;
-    $('city').placeholder           = t.placeholderCity;
-    $('labelTravel').textContent    = t.labelTravel;
-    $('destination').placeholder    = t.placeholderTravel;
-    $('labelAge').textContent       = t.labelAge;
-    $('age').placeholder            = t.placeholderAge;
-    $('labelBookLang').textContent  = t.labelBookLang;
-    $('bookLang').placeholder       = t.placeholderBookLang;
-    $('addAdventureBtn').textContent = t.addAdventure;
-    $('createBookBtn').textContent   = t.createBook;
-  
-    document.querySelectorAll('.adventure-section').forEach((sec, i) => {
-      sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
-      const span = sec.querySelector('.drop-zone span');
-      if (span) span.textContent = t.dragDrop;
-      const inputs = sec.querySelectorAll('.form-group');
-      if (inputs[0]) inputs[0].querySelector('label').textContent = t.labelAdvName;
-      if (inputs[1]) inputs[1].querySelector('label').textContent = t.labelAdvDesc;
-      if (inputs[2]) inputs[2].querySelector('label').textContent = t.labelAdvImages;
-    });
-  }
-  
-  document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
-  window.addEventListener('DOMContentLoaded', () => {
-    const urlLang = new URLSearchParams(window.location.search).get('lang');
-    const initialLang = urlLang || 'en';
-    apply(initialLang);
-  });
-  
-  /* ---------- image preview ---------- */
-  function preview(files, container) {
-    Array.from(files).forEach(file => {
-      if (!file.type.startsWith('image/')) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const wrap = document.createElement('div');
-        wrap.className = 'image-container';
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        img.alt = file.name;
-        const btn = document.createElement('button');
-        btn.className = 'remove-btn';
-        btn.textContent = '×';
-        btn.onclick = () => wrap.remove();
-        wrap.append(img, btn);
-        container.append(wrap);
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-  
-  function renumber() {
-    const t = translations[$('langSelect').value] || translations.en;
-    document.querySelectorAll('.adventure-section').forEach((sec, i) => {
-      sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
-    });
-  }
-  
-  /* ---------- add adventure section ---------- */
-  $('addAdventureBtn').addEventListener('click', () => {
-    const idx = document.querySelectorAll('.adventure-section').length;
-    const t   = translations[$('langSelect').value] || translations.en;
-  
-    const sec = document.createElement('div');
-    sec.className = 'adventure-section';
-    sec.innerHTML = `
-      <button type="button" class="remove-adventure">×</button>
-      <div class="adventure-title">${t.adventure} ${idx + 1}</div>
-      <div class="form-group">
-        <label>${t.labelAdvName}</label>
-        <input name="advName" placeholder="${t.placeholderAdvName}" />
-      </div>
-      <div class="form-group">
-        <label>${t.labelAdvDesc}</label>
-        <textarea name="advDesc" rows="4" placeholder="${t.placeholderAdvDesc}"></textarea>
-      </div>
-      <div class="form-group">
-        <label>${t.labelAdvImages}</label>
-        <div class="drop-zone">
-          <span>${t.dragDrop}</span>
-          <input type="file" accept="image/*" multiple />
-        </div>
-        <div class="image-preview"></div>
-      </div>
-    `;
-    $('adventureList').append(sec);
-  
-    sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(); };
-  
-    const dz   = sec.querySelector('.drop-zone');
-    const inp  = dz.querySelector('input[type=file]');
-    const prev = sec.querySelector('.image-preview');
-  
-    inp.addEventListener('change', e => {
-      if (e.target.files.length) preview(e.target.files, prev);
-      inp.value = '';
-    });
-  
-    dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
-  
-    ['dragover','dragleave','drop'].forEach(evt => {
-      dz.addEventListener(evt, e => {
-        e.preventDefault();
-        dz.classList.toggle('drop-zone--over', evt === 'dragover');
-        if (evt === 'drop') {
-          const dropped  = Array.from(e.dataTransfer.files);
-          const existing = Array.from(inp.files);
-          const dt       = new DataTransfer();
-          existing.concat(dropped).forEach(f => dt.items.add(f));
-          inp.files = dt.files;
-          if (dropped.length) preview(dropped, prev);
-          inp.value = '';
-        }
-      });
-    });
-  });
-  
-  /* ---------- handle form submission via fetch ---------- */
-// ---------- handle form submission via google.script.run ----------
-$('adventureForm').addEventListener('submit', e => {
-    e.preventDefault();
-    $('createBookBtn').disabled = true;
-  
-    // validate email
-    const email = $('email').value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      alert('📧 Invalid email format');
-      $('createBookBtn').disabled = false;
-      return;
-    }
-  
-    // build your payload object
-    const out = {
-      name: $('name').value.trim(),
-      email,
-      childName: $('childName').value.trim(),
-      age: $('age').value,
-      bookLang: $('bookLang').value.trim(),
-      country: $('country').value.trim(),
-      city: $('city').value.trim(),
-      destination: $('destination').value.trim(),
-      language: $('langSelect').value,
-      adventures: []
+if (!translations[lang]) lang = 'en';
+const t = translations[lang];
+
+$('langSelect').value    = lang;
+$('title').textContent   = t.title;
+$('subtitle').textContent= t.subtitle;
+$('labelName').textContent      = t.labelName;
+$('name').placeholder           = t.placeholderName;
+$('labelEmail').textContent     = t.labelEmail;
+$('email').placeholder          = t.placeholderEmail;
+$('labelChildName').textContent = t.labelChildName;
+$('childName').placeholder      = t.placeholderChildName;
+$('labelCountry').textContent   = t.labelCountry;
+$('country').placeholder        = t.placeholderCountry;
+$('labelCity').textContent      = t.labelCity;
+$('city').placeholder           = t.placeholderCity;
+$('labelTravel').textContent    = t.labelTravel;
+$('destination').placeholder    = t.placeholderTravel;
+$('addAdventureBtn').textContent = t.addAdventure;
+$('createBookBtn').textContent   = t.createBook;
+$('labelAge').textContent       = t.labelAge;
+$('age').placeholder            = t.placeholderAge;
+
+$('labelBookLang').textContent  = t.labelBookLang;
+$('bookLang').placeholder       = t.placeholderBookLang;
+
+document.querySelectorAll('.adventure-section').forEach((sec, i) => {
+    sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
+    const span = sec.querySelector('.drop-zone span');
+    if (span) span.textContent = t.dragDrop;
+    const inputs = sec.querySelectorAll('.form-group');
+    if (inputs[0]) inputs[0].querySelector('label').textContent = t.labelAdvName;
+    if (inputs[1]) inputs[1].querySelector('label').textContent = t.labelAdvDesc;
+    if (inputs[2]) inputs[2].querySelector('label').textContent = t.labelAdvImages;
+});
+}
+
+document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
+window.addEventListener('DOMContentLoaded', () => {
+const urlLang = new URLSearchParams(window.location.search).get('lang');
+const initialLang = urlLang || 'en';
+apply(initialLang);
+});
+
+/* ---------- image preview ---------- */
+function preview(files, container) {
+Array.from(files).forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+    const wrap = document.createElement('div');
+    wrap.className = 'image-container';
+    const img = document.createElement('img');
+    img.src = e.target.result;
+    img.alt = file.name;
+    const btn = document.createElement('button');
+    btn.className = 'remove-btn';
+    btn.textContent = '×';
+    btn.onclick = () => wrap.remove();
+    wrap.append(img, btn);
+    container.append(wrap);
     };
-  
-    // gather each adventure section
-    document.querySelectorAll('.adventure-section').forEach(sec => {
-      const advName  = sec.querySelector('input[name=advName]').value;
-      const advDesc  = sec.querySelector('textarea[name=advDesc]').value;
-      const files    = sec.querySelector('input[type=file]').files;
-      const images   = [];
-  
-      // convert FileList into an array of File objects
-      for (let f of files) images.push(f);
-  
-      out.adventures.push({
-        name:        advName,
-        description: advDesc,
-        images
-      });
+    reader.readAsDataURL(file);
+});
+}
+
+function renumber() {
+const t = translations[$('langSelect').value] || translations.en;
+document.querySelectorAll('.adventure-section').forEach((sec, i) => {
+    sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
+});
+}
+
+/* ---------- add adventure section ---------- */
+$('addAdventureBtn').addEventListener('click', () => {
+const idx = document.querySelectorAll('.adventure-section').length;
+const t = translations[$('langSelect').value] || translations.en;
+const sec = document.createElement('div');
+sec.className = 'adventure-section';
+sec.innerHTML = `
+    <button type="button" class="remove-adventure">×</button>
+    <div class="adventure-title">${t.adventure} ${idx + 1}</div>
+    <div class="form-group">
+    <label>${t.labelAdvName}</label>
+    <input name="advName" placeholder="${t.placeholderAdvName}" />
+    </div>
+    <div class="form-group">
+    <label>${t.labelAdvDesc}</label>
+    <textarea name="advDesc" rows="4" placeholder="${t.placeholderAdvDesc}"></textarea>
+    </div>
+    <div class="form-group">
+    <label>${t.labelAdvImages}</label>
+    <div class="drop-zone">
+        <span>${t.dragDrop}</span>
+        <input type="file" accept="image/*" multiple />
+    </div>
+    <div class="image-preview"></div>
+    </div>
+`;
+$('adventureList').append(sec);
+
+// remove button
+sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(); };
+
+const dz = sec.querySelector('.drop-zone');
+const inp = dz.querySelector('input[type=file]');
+const prev = sec.querySelector('.image-preview');
+inp.addEventListener('change', e => { preview(e.target.files, prev); inp.value = ''; });
+dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
+['dragover','dragleave','drop'].forEach(evt => {
+    dz.addEventListener(evt, e => {
+    e.preventDefault();
+    dz.classList.toggle('drop-zone--over', evt === 'dragover');
+    if (evt === 'drop') { preview(e.dataTransfer.files, prev); inp.value = ''; }
     });
-  
-    // call your server‐side function
-    google.script.run
-      .withSuccessHandler(orderId => {
-        // show the thank-you screen
+});
+});
+
+/* ---------- handle form submission via fetch ---------- */
+$('adventureForm').addEventListener('submit', async e => {
+e.preventDefault();
+$('createBookBtn').disabled = true;
+    // validate email
+const email = $('email').value.trim();
+if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('📧 Invalid email format');
+    $('createBookBtn').disabled = false;
+    return;
+}
+// build payload
+const out = {
+    name: $('name').value.trim(),
+    email,
+    childName: $('childName').value.trim(),
+    age: $('age').value,
+    bookLang: $('bookLang').value.trim(),
+    country: $('country').value.trim(),
+    city: $('city').value.trim(),
+    destination: $('destination').value.trim(),
+    language: $('langSelect').value,
+    adventures: []
+};
+for (const sec of document.querySelectorAll('.adventure-section')) {
+    const advName = sec.querySelector('input[name=advName]').value;
+    const advDesc = sec.querySelector('textarea[name=advDesc]').value;
+    const files   = sec.querySelector('input[type=file]').files;
+    const images  = [];
+
+    for (let f of files) {
+        // now this `await` is inside the surrounding async fn
+        const dataUrl = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload  = e => res(e.target.result);
+        r.onerror = rej;
+        r.readAsDataURL(f);
+        });
+        images.push(dataUrl);
+    }
+
+    out.adventures.push({ name: advName, description: advDesc, images });
+    }
+
+try {
+    const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
+        method: 'POST',
+        mode:   'no-cors',
+        body:    JSON.stringify(out)
+        });
+    
+        // immediately show a generic thank-you:
         document.body.innerHTML = `
-          <div class="container" style="text-align:center;">
-            <h2>✅ Thank you, adventurer!</h2>
-            <p>Your order <b>#${orderId}</b> has been received.<br>
-               ✉️ A confirmation email is flying your way!</p>
-            <p style="margin-top:20px;">
-              <a href="https://www.instagram.com/anything.personalized/"
-                 target="_blank"
-                 style="display:inline-block;
-                        padding:12px 20px;
-                        background:#E1306C;
-                        color:#fff;
-                        border-radius:8px;
-                        font-weight:bold;
-                        text-decoration:none;">
-                📸 Follow us on Instagram
-              </a>
-            </p>
-          </div>
-        `;
-      })
-      .withFailureHandler(err => {
+        <div class="container" style="text-align: center;">
+          <h2>✅ Thank you, adventurer!</h2>
+          <p>Your order has been received.<br>
+          ✉️ Check your inbox for your confirmation email.</p>
+          <p style="margin-top: 20px;">
+            <a href="https://www.instagram.com/anything.personalized/" target="_blank"
+               style="display: inline-block; padding: 12px 20px; background: #E1306C;
+                      color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
+              📸 Follow us on Instagram
+            </a>
+          </p>
+        </div>
+      `;    } catch (err) {
         console.error(err);
         alert('❌ Could not place your order. Please try again.');
         $('createBookBtn').disabled = false;
-      })
-      .processOrder(out);
-  });
-  
+    }
+    });
