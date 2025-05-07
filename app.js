@@ -312,8 +312,9 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
 try {
     const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
         method: 'POST',
-        mode:   'no-cors',
-        body:    JSON.stringify(out)
+        mode:   "cors",
+        headers:{ "Content-Type": "application/json" },
+        body:   JSON.stringify(out)
         });
     
         // immediately show a generic thank-you:
