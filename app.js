@@ -168,9 +168,9 @@ function apply(lang) {
     $('labelTravel').textContent    = t.labelTravel;
     $('destination').placeholder    = t.placeholderTravel;
     $('labelAge').textContent       = t.labelAge;
+    $('age').placeholder            = t.placeholderAge;
     $('labelBookLang').textContent  = t.labelBookLang;
     $('bookLang').placeholder       = t.placeholderBookLang;
-  
     $('addAdventureBtn').textContent = t.addAdventure;
     $('createBookBtn').textContent   = t.createBook;
   
@@ -250,64 +250,48 @@ function apply(lang) {
     `;
     $('adventureList').append(sec);
   
-    // remove button
-    sec.querySelector('.remove-adventure').onclick = () => {
-      sec.remove();
-      renumber();
-    };
+    sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(); };
   
     const dz   = sec.querySelector('.drop-zone');
     const inp  = dz.querySelector('input[type=file]');
     const prev = sec.querySelector('.image-preview');
   
-    // 1) file-dialog selection
     inp.addEventListener('change', e => {
-      if (e.target.files.length) {
-        preview(e.target.files, prev);
-      }
-      inp.value = ''; // allow same-file reselect
+      if (e.target.files.length) preview(e.target.files, prev);
+      inp.value = '';
     });
   
-    // 2) clicking on the zone
-    dz.addEventListener('click', e => {
-      if (e.target === dz) inp.click();
-    });
+    dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
   
-    // 3) drag & drop
     ['dragover','dragleave','drop'].forEach(evt => {
       dz.addEventListener(evt, e => {
         e.preventDefault();
         dz.classList.toggle('drop-zone--over', evt === 'dragover');
-  
         if (evt === 'drop') {
-          // merge old + new files
           const dropped  = Array.from(e.dataTransfer.files);
           const existing = Array.from(inp.files);
           const dt       = new DataTransfer();
           existing.concat(dropped).forEach(f => dt.items.add(f));
           inp.files = dt.files;
-  
-          // preview only the new ones
           if (dropped.length) preview(dropped, prev);
           inp.value = '';
         }
       });
     });
-  
   });
-
+  
   /* ---------- handle form submission via fetch ---------- */
   $('adventureForm').addEventListener('submit', async e => {
     e.preventDefault();
     $('createBookBtn').disabled = true;
-    // validate email
+  
     const email = $('email').value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       alert('📧 Invalid email format');
       $('createBookBtn').disabled = false;
       return;
     }
-    // build payload
+  
     const out = {
       name: $('name').value.trim(),
       email,
@@ -320,6 +304,7 @@ function apply(lang) {
       language: $('langSelect').value,
       adventures: []
     };
+  
     document.querySelectorAll('.adventure-section').forEach(sec => {
       const advName = sec.querySelector('input[name=advName]').value;
       const advDesc = sec.querySelector('textarea[name=advDesc]').value;
@@ -330,19 +315,18 @@ function apply(lang) {
     });
   
     try {
-      const resp = await fetch('https://script.google.com/macros/s/YOUR_DEPLOY_ID/exec', {
+      const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(out)
       });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json(); // { orderId }
+      const data = await resp.json();
       document.body.innerHTML = `
-        <div class="container">
+        <div class="container" style="text-align:center;">
           <h2>✅ Thank you, adventurer!</h2>
-          <p>Your order <b>#${data.orderId}</b> has been received.<br>
-          ✉️ A confirmation email is flying your way!</p>
+          <p>Your order <b>#${data.orderId}</b> has been received.<br>✉️ A confirmation email is flying your way!</p>
         </div>
       `;
     } catch (err) {
