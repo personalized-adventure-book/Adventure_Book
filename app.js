@@ -326,32 +326,46 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
     }
     console.log('Final payload:', out);
 
-try {
-    const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify(out)
+    try {
+        const payloadStr = JSON.stringify(out);
+      
+        // send as text/plain to avoid preflight
+        const resp = await fetch(
+          'https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: payloadStr
           }
         );
-        if (!resp.ok) throw new Error(resp.statusText);
+      
+        if (!resp.ok) {
+          throw new Error(`Server responded ${resp.status} ${resp.statusText}`);
+        }
+      
+        // Now parse the JSON body
         const { orderId } = await resp.json();
-            // immediately show a generic thank-you:
+      
+        // show thank-you screen
         document.body.innerHTML = `
-        <div class="container" style="text-align: center;">
-          <h2>✅ Thank you, adventurer!</h2>
-          <p>Your order has been received.<br>
-          ✉️ Check your inbox for your confirmation email.</p>
-          <p style="margin-top: 20px;">
-            <a href="https://www.instagram.com/anything.personalized/" target="_blank"
-               style="display: inline-block; padding: 12px 20px; background: #E1306C;
-                      color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
-              📸 Follow us on Instagram
-            </a>
-          </p>
-        </div>
-      `;    } catch (err) {
-        console.error(err);
+          <div class="container" style="text-align: center;">
+            <h2>✅ Thank you, adventurer!</h2>
+            <p>Your order <b>#${orderId}</b> has been received.<br>
+            ✉️ Check your inbox for your confirmation email.</p>
+            <p style="margin-top: 20px;">
+              <a href="https://www.instagram.com/anything.personalized/" target="_blank"
+                 style="display: inline-block; padding: 12px 20px; background: #E1306C;
+                        color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
+                📸 Follow us on Instagram
+              </a>
+            </p>
+          </div>
+        `;
+      } catch (err) {
+        console.error('Order submission failed:', err);
         alert('❌ Could not place your order. Please try again.');
         $('createBookBtn').disabled = false;
-    }
+      }
     });
