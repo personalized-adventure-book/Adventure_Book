@@ -265,6 +265,16 @@ dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
 });
 });
 
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result);        // "data:image/png;base64,AAAA…"
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+  
+
 /* ---------- handle form submission via fetch ---------- */
 $('adventureForm').addEventListener('submit', async e => {
 e.preventDefault();
@@ -278,49 +288,42 @@ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 }
 // build payload
 const out = {
-    name:       $('name').value.trim(),
-    email:      $('email').value.trim(),
-    childName:  $('childName').value.trim(),
-    age:        $('age').value,
-    bookLang:   $('bookLang').value.trim(),
-    country:    $('country').value.trim(),
-    city:       $('city').value.trim(),
-    destination:$('destination').value.trim(),
-    language:   $('langSelect').value,
+    name: $('name').value.trim(),
+    email,
+    childName: $('childName').value.trim(),
+    age: $('age').value,
+    bookLang: $('bookLang').value.trim(),
+    country: $('country').value.trim(),
+    city: $('city').value.trim(),
+    destination: $('destination').value.trim(),
+    language: $('langSelect').value,
     adventures: []
 };
-
-function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload    = () => resolve(reader.result);
-      reader.onerror   = () => reject(reader.error);
-      reader.readAsDataURL(file);
-    });
-  }
-
-
 for (const sec of document.querySelectorAll('.adventure-section')) {
     const advName = sec.querySelector('input[name=advName]').value;
     const advDesc = sec.querySelector('textarea[name=advDesc]').value;
     const files   = sec.querySelector('input[type=file]').files;
-    const images  = await Promise.all(
-      Array.from(files).map(fileToBase64)
+
+    // convert every File → base64 string
+    const images = await Promise.all(
+      Array.from(files).map(f => fileToBase64(f))
     );
 
-    out.adventures.push({ name: advName, description: advDesc, images });
-    }
+    out.adventures.push({
+      name:        advName,
+      description: advDesc,
+      images       // <-- array of "data:image/…;base64,…" strings
+    });
+  }
 
 try {
     const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
         method:  'POST',
-        mode:    'cors',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(out)
-        });
-        if (!resp.ok) throw new Error(await resp.text());
-        const { orderId } = await resp.json();
-      
+      });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+
         // immediately show a generic thank-you:
         document.body.innerHTML = `
         <div class="container" style="text-align: center;">
