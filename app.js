@@ -344,14 +344,7 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
             body: payloadStr
           }
         );
-      
-        if (!resp.ok) {
-          throw new Error(`Server responded ${resp.status} ${resp.statusText}`);
-        }
-      
-        // Now parse the JSON body
-        const { orderId } = await resp.json();
-      
+            
         // show thank-you screen
         document.body.innerHTML = `
           <div class="container" style="text-align: center;">
