@@ -328,13 +328,14 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
 
 try {
     const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
-        method: 'POST',
-        //mode:   'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(out)
-        });
-    
-        // immediately show a generic thank-you:
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(out)
+          }
+        );
+        if (!resp.ok) throw new Error(resp.statusText);
+        const { orderId } = await resp.json();
+            // immediately show a generic thank-you:
         document.body.innerHTML = `
         <div class="container" style="text-align: center;">
           <h2>✅ Thank you, adventurer!</h2>
