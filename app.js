@@ -265,6 +265,18 @@ dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
 });
 });
 
+function fileToBase64(file) {
+    console.log("entered in the converter");
+    console.log("file" , file);
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result);        // "data:image/png;base64,AAAA…"
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
 /* ---------- handle form submission via fetch ---------- */
 $('adventureForm').addEventListener('submit', async e => {
 e.preventDefault();
@@ -293,18 +305,9 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
     const advName = sec.querySelector('input[name=advName]').value;
     const advDesc = sec.querySelector('textarea[name=advDesc]').value;
     const files   = sec.querySelector('input[type=file]').files;
-    const images  = [];
-
-    for (let f of files) {
-        // now this `await` is inside the surrounding async fn
-        const dataUrl = await new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload  = e => res(e.target.result);
-        r.onerror = rej;
-        r.readAsDataURL(f);
-        });
-        images.push(dataUrl);
-    }
+    const images = await Promise.all(
+      Array.from(files).map(f => fileToBase64(f))
+    );
 
     out.adventures.push({ name: advName, description: advDesc, images });
     }
