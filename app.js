@@ -278,44 +278,49 @@ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 }
 // build payload
 const out = {
-    name: $('name').value.trim(),
-    email,
-    childName: $('childName').value.trim(),
-    age: $('age').value,
-    bookLang: $('bookLang').value.trim(),
-    country: $('country').value.trim(),
-    city: $('city').value.trim(),
-    destination: $('destination').value.trim(),
-    language: $('langSelect').value,
+    name:       $('name').value.trim(),
+    email:      $('email').value.trim(),
+    childName:  $('childName').value.trim(),
+    age:        $('age').value,
+    bookLang:   $('bookLang').value.trim(),
+    country:    $('country').value.trim(),
+    city:       $('city').value.trim(),
+    destination:$('destination').value.trim(),
+    language:   $('langSelect').value,
     adventures: []
 };
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload    = () => resolve(reader.result);
+      reader.onerror   = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+
 for (const sec of document.querySelectorAll('.adventure-section')) {
     const advName = sec.querySelector('input[name=advName]').value;
     const advDesc = sec.querySelector('textarea[name=advDesc]').value;
     const files   = sec.querySelector('input[type=file]').files;
-    const images  = [];
-
-    for (let f of files) {
-        // now this `await` is inside the surrounding async fn
-        const dataUrl = await new Promise((res, rej) => {
-        const r = new FileReader();
-        r.onload  = e => res(e.target.result);
-        r.onerror = rej;
-        r.readAsDataURL(f);
-        });
-        images.push(dataUrl);
-    }
+    const images  = await Promise.all(
+      Array.from(files).map(fileToBase64)
+    );
 
     out.adventures.push({ name: advName, description: advDesc, images });
     }
 
 try {
     const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
-        method: 'POST',
-        mode:   'no-cors',
+        method:  'POST',
+        mode:    'cors',
+        headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(out)
         });
-    
+        if (!resp.ok) throw new Error(await resp.text());
+        const { orderId } = await resp.json();
+      
         // immediately show a generic thank-you:
         document.body.innerHTML = `
         <div class="container" style="text-align: center;">
