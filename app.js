@@ -348,7 +348,7 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
         document.body.innerHTML = `
           <div class="container" style="text-align: center;">
             <h2>✅ Thank you, adventurer!</h2>
-            <p>Your order <b>#${orderId}</b> has been received.<br>
+            <p>Your order has been received.<br>
             ✉️ Check your inbox for your confirmation email.</p>
             <p style="margin-top: 20px;">
               <a href="https://www.instagram.com/anything.personalized/" target="_blank"
