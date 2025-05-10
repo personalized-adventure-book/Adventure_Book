@@ -318,11 +318,10 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
 
 try {
     const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(out)
-      });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        method: 'POST',
+        body:   JSON.stringify(out)    // ← no headers, no custom mode
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
         // immediately show a generic thank-you:
         document.body.innerHTML = `
