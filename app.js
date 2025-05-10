@@ -254,9 +254,7 @@ sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(
 const dz = sec.querySelector('.drop-zone');
 const inp = dz.querySelector('input[type=file]');
 const prev = sec.querySelector('.image-preview');
-inp.addEventListener('change', e => { preview(e.target.files, prev); 
-    //inp.value = ''; 
-});
+inp.addEventListener('change', e => { preview(e.target.files, prev); inp.value = ''; });
 dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
 ['dragover','dragleave','drop'].forEach(evt => {
     dz.addEventListener(evt, e => {
@@ -266,18 +264,6 @@ dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
     });
 });
 });
-
-function fileToBase64(file) {
-    console.log("entered in the converter");
-    console.log("file" , file);
-
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result);        // "data:image/png;base64,AAAA…"
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(file);
-    });
-  }
 
 /* ---------- handle form submission via fetch ---------- */
 $('adventureForm').addEventListener('submit', async e => {
@@ -307,66 +293,49 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
     const advName = sec.querySelector('input[name=advName]').value;
     const advDesc = sec.querySelector('textarea[name=advDesc]').value;
     const files   = sec.querySelector('input[type=file]').files;
-    const images = await Promise.all(
-      Array.from(files).map(f => fileToBase64(f))
-    );
+    const images  = [];
 
-    // build the adventure object
-    const adventure = {
-    name:        advName,
-    description: advDesc,
-    images      // array of data-URL strings
-    };
-
-    // log it so you can inspect in the browser console
-    console.log('Adding adventure:', adventure);
-
-    // now push it
-    out.adventures.push(adventure);
+    for (let f of files) {
+        // now this `await` is inside the surrounding async fn
+        const dataUrl = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload  = e => res(e.target.result);
+        r.onerror = rej;
+        r.readAsDataURL(f);
+        });
+        images.push(dataUrl);
     }
-    console.log('Final payload:', out);
 
-    try {
-        const payloadStr = JSON.stringify(out);
-      
-        // send as text/plain to avoid preflight
-        const resp = await fetch(
-          'https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec',
-          {
-            method: 'POST',
-            mode : 'no-cors',
-            headers: {
-              'Content-Type': 'text/plain;charset=utf-8'
-            },
-            body: payloadStr
-          }
-        );
-      
-        if (!resp.ok) {
-          throw new Error(`Server responded ${resp.status} ${resp.statusText}`);
-        }
-      
-        // Now parse the JSON body
-        const { orderId } = await resp.json();
-      
-        // show thank-you screen
+    out.adventures.push({ name: advName, description: advDesc, images });
+    }
+
+try {
+    const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
+        method: 'POST',
+        mode:   'no-cors',
+        headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },        
+        body:    JSON.stringify(out)
+        });
+    
+        // immediately show a generic thank-you:
         document.body.innerHTML = `
-          <div class="container" style="text-align: center;">
-            <h2>✅ Thank you, adventurer!</h2>
-            <p>Your order <b>#${orderId}</b> has been received.<br>
-            ✉️ Check your inbox for your confirmation email.</p>
-            <p style="margin-top: 20px;">
-              <a href="https://www.instagram.com/anything.personalized/" target="_blank"
-                 style="display: inline-block; padding: 12px 20px; background: #E1306C;
-                        color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
-                📸 Follow us on Instagram
-              </a>
-            </p>
-          </div>
-        `;
-      } catch (err) {
-        console.error('Order submission failed:', err);
+        <div class="container" style="text-align: center;">
+          <h2>✅ Thank you, adventurer!</h2>
+          <p>Your order has been received.<br>
+          ✉️ Check your inbox for your confirmation email.</p>
+          <p style="margin-top: 20px;">
+            <a href="https://www.instagram.com/anything.personalized/" target="_blank"
+               style="display: inline-block; padding: 12px 20px; background: #E1306C;
+                      color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
+              📸 Follow us on Instagram
+            </a>
+          </p>
+        </div>
+      `;    } catch (err) {
+        console.error(err);
         alert('❌ Could not place your order. Please try again.');
         $('createBookBtn').disabled = false;
-      }
+    }
     });
