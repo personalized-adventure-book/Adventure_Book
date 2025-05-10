@@ -343,7 +343,8 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
             body: payloadStr
           }
         );
-            
+         
+        
         // show thank-you screen
         document.body.innerHTML = `
           <div class="container" style="text-align: center;">
