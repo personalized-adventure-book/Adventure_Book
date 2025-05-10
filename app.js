@@ -254,7 +254,9 @@ sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(
 const dz = sec.querySelector('.drop-zone');
 const inp = dz.querySelector('input[type=file]');
 const prev = sec.querySelector('.image-preview');
-inp.addEventListener('change', e => { preview(e.target.files, prev); inp.value = ''; });
+inp.addEventListener('change', e => { preview(e.target.files, prev); 
+    //inp.value = ''; 
+});
 dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
 ['dragover','dragleave','drop'].forEach(evt => {
     dz.addEventListener(evt, e => {
