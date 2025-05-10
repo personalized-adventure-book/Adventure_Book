@@ -311,6 +311,7 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
       Array.from(files).map(f => fileToBase64(f))
     );
 
+    console.log(images);
     // build the adventure object
     const adventure = {
     name:        advName,
