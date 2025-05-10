@@ -329,7 +329,6 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
     }
     console.log('Final payload:', out);
 
-    try {
         const payloadStr = JSON.stringify(out);
       
         // send as text/plain to avoid preflight
@@ -360,9 +359,4 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
             </p>
           </div>
         `;
-      } catch (err) {
-        console.error('Order submission failed:', err);
-        alert('❌ Could not place your order. Please try again.');
-        $('createBookBtn').disabled = false;
-      }
     });
