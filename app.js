@@ -268,12 +268,14 @@ dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
 });
 
 function fileToBase64(file) {
-    console.log("entered in the converter");
-    console.log("file" , file);
-
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result);        // "data:image/png;base64,AAAA…"
+      reader.onload = () => {
+        // reader.result is like "data:image/png;base64,AAAFBfj42Pj4…"
+        const dataUrl = /** @type {string} */(reader.result);
+        const [, rawBase64] = dataUrl.split(',', 2);
+        resolve(rawBase64);
+      };
       reader.onerror = () => reject(reader.error);
       reader.readAsDataURL(file);
     });
