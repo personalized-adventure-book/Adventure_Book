@@ -273,7 +273,6 @@ function fileToBase64(file) {
       reader.readAsDataURL(file);
     });
   }
-  
 
 /* ---------- handle form submission via fetch ---------- */
 $('adventureForm').addEventListener('submit', async e => {
@@ -303,26 +302,21 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
     const advName = sec.querySelector('input[name=advName]').value;
     const advDesc = sec.querySelector('textarea[name=advDesc]').value;
     const files   = sec.querySelector('input[type=file]').files;
-
-    // convert every File → base64 string
     const images = await Promise.all(
       Array.from(files).map(f => fileToBase64(f))
     );
 
-    out.adventures.push({
-      name:        advName,
-      description: advDesc,
-      images       // <-- array of "data:image/…;base64,…" strings
-    });
-  }
+
+    out.adventures.push({ name: advName, description: advDesc, images });
+    }
 
 try {
     const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
         method: 'POST',
-        body:   JSON.stringify(out)    // ← no headers, no custom mode
-    });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-
+        mode:   'no-cors',
+        body:    JSON.stringify(out)
+        });
+    
         // immediately show a generic thank-you:
         document.body.innerHTML = `
         <div class="container" style="text-align: center;">
