@@ -254,7 +254,9 @@ sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(
 const dz = sec.querySelector('.drop-zone');
 const inp = dz.querySelector('input[type=file]');
 const prev = sec.querySelector('.image-preview');
-inp.addEventListener('change', e => { preview(e.target.files, prev); inp.value = ''; });
+inp.addEventListener('change', e => { preview(e.target.files, prev); 
+    //inp.value = ''; 
+});
 dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
 ['dragover','dragleave','drop'].forEach(evt => {
     dz.addEventListener(evt, e => {
@@ -309,36 +311,62 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
       Array.from(files).map(f => fileToBase64(f))
     );
 
-    out.adventures.push({ name: advName, description: advDesc, images });
-    }
+    // build the adventure object
+    const adventure = {
+    name:        advName,
+    description: advDesc,
+    images      // array of data-URL strings
+    };
 
-try {
-    const resp = await fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
-        method: 'POST',
-        mode:   'no-cors',
-        headers: {
-            'Content-Type': 'text/plain;charset=utf-8'
-          },        
-        body:    JSON.stringify(out)
-        });
-    
-        // immediately show a generic thank-you:
+    // log it so you can inspect in the browser console
+    console.log('Adding adventure:', adventure);
+
+    // now push it
+    out.adventures.push(adventure);
+    }
+    console.log('Final payload:', out);
+
+    try {
+        const payloadStr = JSON.stringify(out);
+      
+        // send as text/plain to avoid preflight
+        const resp = await fetch(
+          'https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec',
+          {
+            method: 'POST',
+            mode : 'no-cors',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: payloadStr
+          }
+        );
+      
+        if (!resp.ok) {
+          throw new Error(`Server responded ${resp.status} ${resp.statusText}`);
+        }
+      
+        // Now parse the JSON body
+        const { orderId } = await resp.json();
+      
+        // show thank-you screen
         document.body.innerHTML = `
-        <div class="container" style="text-align: center;">
-          <h2>✅ Thank you, adventurer!</h2>
-          <p>Your order has been received.<br>
-          ✉️ Check your inbox for your confirmation email.</p>
-          <p style="margin-top: 20px;">
-            <a href="https://www.instagram.com/anything.personalized/" target="_blank"
-               style="display: inline-block; padding: 12px 20px; background: #E1306C;
-                      color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
-              📸 Follow us on Instagram
-            </a>
-          </p>
-        </div>
-      `;    } catch (err) {
-        console.error(err);
+          <div class="container" style="text-align: center;">
+            <h2>✅ Thank you, adventurer!</h2>
+            <p>Your order <b>#${orderId}</b> has been received.<br>
+            ✉️ Check your inbox for your confirmation email.</p>
+            <p style="margin-top: 20px;">
+              <a href="https://www.instagram.com/anything.personalized/" target="_blank"
+                 style="display: inline-block; padding: 12px 20px; background: #E1306C;
+                        color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
+                📸 Follow us on Instagram
+              </a>
+            </p>
+          </div>
+        `;
+      } catch (err) {
+        console.error('Order submission failed:', err);
         alert('❌ Could not place your order. Please try again.');
         $('createBookBtn').disabled = false;
-    }
+      }
     });
