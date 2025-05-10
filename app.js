@@ -329,10 +329,11 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
     }
     console.log('Final payload:', out);
 
+    try {
         const payloadStr = JSON.stringify(out);
       
         // send as text/plain to avoid preflight
-        const resp =  fetch(
+        const resp = await fetch(
           'https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec',
           {
             method: 'POST',
@@ -344,8 +345,10 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
           }
         );
       
-        // Now parse the JSON body
-        const { orderId } = await resp.json();
+        if (!resp.ok) {
+          throw new Error(`Server responded ${resp.status} ${resp.statusText}`);
+        }
+      
       
         // show thank-you screen
         document.body.innerHTML = `
@@ -362,4 +365,9 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
             </p>
           </div>
         `;
+      } catch (err) {
+        console.error('Order submission failed:', err);
+        alert('❌ Could not place your order. Please try again.');
+        $('createBookBtn').disabled = false;
+      }
     });
