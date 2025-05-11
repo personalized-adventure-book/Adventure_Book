@@ -1,6 +1,4 @@
 
-
-
 // Get or create a per‐visitor sessionId
 function getSessionId() {
   const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -231,24 +229,41 @@ document.querySelectorAll('.adventure-section').forEach((sec, i) => {
 }
 
 document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
-window.addEventListener('DOMContentLoaded', () => {
-const urlLang = new URLSearchParams(window.location.search).get('lang');
-const initialLang = urlLang || 'en';
-apply(initialLang);
-  // 2) **then** inject the little red “*” on every required label
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) figure out initial language and populate all labels/placeholders
+  const urlLang     = new URLSearchParams(window.location.search).get('lang');
+  const initialLang = urlLang || 'en';
+  apply(initialLang);
+
+  // 2) inject a little red “*” onto every required field
   document.querySelectorAll('input[required], textarea[required], select[required]')
     .forEach(input => {
       const id = input.id;
-      if (!id) return;  
+      if (!id) return;
       const lbl = document.querySelector(`label[for="${id}"]`);
-      if (!lbl || lbl.querySelector('abbr.required')) return;  
+      if (!lbl || lbl.querySelector('abbr.required')) return;
       const star = document.createElement('abbr');
-      star.className = 'required';
-      star.title     = 'This field is required';
+      star.className   = 'required';
+      star.title       = 'This field is required';
       star.textContent = '*';
       lbl.appendChild(star);
     });
 
+  // 3) now lock down every control except the email field
+  const emailInput   = document.getElementById('email');
+  const otherControls = Array.from(
+    document.querySelectorAll(
+      '#adventureForm input, #adventureForm textarea, #adventureForm select, #addAdventureBtn, #createBookBtn'
+    )
+  ).filter(el => el.id !== 'email');
+
+  otherControls.forEach(el => el.disabled = true);
+
+  // 4) only when the email becomes valid do we unlock everything else
+  emailInput.addEventListener('input', () => {
+    const ok = emailInput.checkValidity();
+    otherControls.forEach(el => el.disabled = !ok);
+  });
 });
 
 function preview(files, container) {
