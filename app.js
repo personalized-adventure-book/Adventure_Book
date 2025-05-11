@@ -270,7 +270,7 @@ document.querySelectorAll('input[required], textarea[required], select[required]
       const info = document.createElement('abbr');
       info.className = 'info';
       info.setAttribute('data-tooltip', 'Please enter a valid email first');
-      //info.textContent = '⚠️';
+      info.textContent = '';
       el.parentNode.insertBefore(info, el.nextSibling);
     }
   }
