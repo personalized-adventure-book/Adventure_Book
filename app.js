@@ -236,18 +236,18 @@ document.addEventListener('DOMContentLoaded', () => {
   apply(initialLang);
 
   // 2) add little red “*” to every required label
-  document.querySelectorAll('input[required], textarea[required], select[required]')
-    .forEach(input => {
-      const id = input.id;
-      if (!id) return;
-      const lbl = document.querySelector(`label[for="${id}"]`);
-      if (!lbl || lbl.querySelector('abbr.required')) return;
-      const star = document.createElement('abbr');
-      star.className   = 'required';
-      star.title       = 'This field is required';
-      star.textContent = '*';
-      lbl.appendChild(star);
-    });
+document.querySelectorAll('input[required], textarea[required], select[required]')
+  .forEach(input => {
+    const id = input.id;
+    if (!id) return;
+    const lbl = document.querySelector(`label[for="${id}"]`);
+    if (!lbl || lbl.querySelector('abbr.required')) return;
+    const star = document.createElement('abbr');
+    star.className   = 'required';
+    star.setAttribute('data-tooltip', 'This field is required');
+    star.textContent = '*';
+    lbl.appendChild(star);
+  });
 
   // 3) grab everything except the email field
   const emailInput   = document.getElementById('email');

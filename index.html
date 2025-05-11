@@ -132,15 +132,16 @@
     }
     
     abbr.required {
-      position: relative;       /* create a positioning context */
-      text-decoration: none;    /* we already style the “*” in red */
+      position: relative;
+      text-decoration: none;
+      color: red;
       cursor: help;
     }
 
     abbr.required:hover::after {
-      content: attr(title);     /* pull in the title text */
+      content: attr(data-tooltip);
       position: absolute;
-      bottom: 100%;             /* position above the star */
+      bottom: 100%;
       left: 50%;
       transform: translateX(-50%) translateY(-6px);
       background: rgba(0,0,0,0.8);
@@ -149,7 +150,7 @@
       border-radius: 4px;
       white-space: nowrap;
       font-size: 0.75rem;
-      pointer-events: none;     /* keep the hover state */
+      pointer-events: none;
       z-index: 10;
     }
 
