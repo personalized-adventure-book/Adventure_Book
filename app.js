@@ -230,12 +230,12 @@ document.querySelectorAll('.adventure-section').forEach((sec, i) => {
 
 document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
 document.addEventListener('DOMContentLoaded', () => {
-  // 1) figure out initial language and populate all labels/placeholders
+  // 1) pick up initial language & populate UI
   const urlLang     = new URLSearchParams(window.location.search).get('lang');
   const initialLang = urlLang || 'en';
   apply(initialLang);
 
-  // 2) inject a little red “*” onto every required field
+  // 2) add little red “*” to every required label
   document.querySelectorAll('input[required], textarea[required], select[required]')
     .forEach(input => {
       const id = input.id;
@@ -249,17 +249,45 @@ document.addEventListener('DOMContentLoaded', () => {
       lbl.appendChild(star);
     });
 
-  // 3) now lock down every control except the email field
+  // 3) grab everything except the email field
   const emailInput   = document.getElementById('email');
   const otherControls = Array.from(
     document.querySelectorAll(
-      '#adventureForm input, #adventureForm textarea, #adventureForm select, #addAdventureBtn, #createBookBtn'
+      '#adventureForm input, #adventureForm textarea, #adventureForm select, ' +
+      '#addAdventureBtn, #createBookBtn'
     )
   ).filter(el => el.id !== 'email');
 
+  // 3a) disable them immediately
   otherControls.forEach(el => el.disabled = true);
 
-  // 4) only when the email becomes valid do we unlock everything else
+  // helper: show a floating tooltip near `el`
+  function showTooltip(el, msg) {
+    const tip = document.createElement('div');
+    tip.className = 'field-tooltip';
+    tip.textContent = msg;
+    document.body.appendChild(tip);
+    const r = el.getBoundingClientRect();
+    tip.style.top  = `${window.scrollY + r.top - tip.offsetHeight - 6}px`;
+    tip.style.left = `${window.scrollX + r.left + (r.width - tip.offsetWidth)/2}px`;
+    requestAnimationFrame(() => tip.style.opacity = 1);
+    setTimeout(() => {
+      tip.style.opacity = 0;
+      tip.addEventListener('transitionend', () => tip.remove(), { once: true });
+    }, 1500);
+  }
+
+  // 3b) intercept any clicks on the disabled controls
+  otherControls.forEach(el => {
+    el.addEventListener('click', e => {
+      if (el.disabled) {
+        e.preventDefault();
+        showTooltip(el, 'Please enter a valid email first');
+      }
+    });
+  });
+
+  // 4) watch the email field — only once it’s valid do we re-enable everything
   emailInput.addEventListener('input', () => {
     const ok = emailInput.checkValidity();
     otherControls.forEach(el => el.disabled = !ok);
