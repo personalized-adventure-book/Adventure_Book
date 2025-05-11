@@ -331,6 +331,12 @@ function fileToBase64(file) {
 
 /* ---------- handle form submission via fetch ---------- */
 $('adventureForm').addEventListener('submit', async e => {
+  trackEvent('submit', {
+    form: 'adventureForm',
+    // optional: how many adventure slots there were
+    adventureCount: document.querySelectorAll('.adventure-section').length
+  });
+  
 e.preventDefault();
 $('createBookBtn').disabled = true;
     // validate email
