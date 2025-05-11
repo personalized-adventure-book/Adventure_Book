@@ -21,26 +21,6 @@ function trackEvent(eventType, details = {}) {
   });
 }
 
-
-// 1) Track page loads
-window.addEventListener('load', () => trackEvent('pageLoad'));
-
-// 2) Track focus on the “name” field
-document.getElementById('name')
-        .addEventListener('focus', () => trackEvent('focus', { field: 'name' }));
-
-// 3) Track every keystroke in email (for demo, we’ll only log the field name, not full content)
-document.getElementById('email')
-        .addEventListener('input', () => trackEvent('input', { field: 'email' }));
-
-// 4) Track clicks on “Add Adventure”
-document.getElementById('addAdventureBtn')
-        .addEventListener('click', () => trackEvent('click', { button: 'addAdventure' }));
-
-// 5) Track form submission
-document.getElementById('adventureForm')
-        .addEventListener('submit', () => trackEvent('submit', { form: 'adventureForm' }));
-
 // ▶︎ visitor‐counter ping
 window.addEventListener('load', () => {
     console.log("i entered");
@@ -416,3 +396,47 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
           </div>
         `;
     });
+
+
+    // helper to figure out section index (0-based, or null if none)
+function getSectionIndex(el) {
+  const secs = Array.from(document.querySelectorAll('.adventure-section'));
+  const sec  = el.closest('.adventure-section');
+  return sec ? secs.indexOf(sec) : null;
+}
+
+// delegate focus events
+const form = document.getElementById('adventureForm');
+form.addEventListener('focusin', e => {
+  const t = e.target;
+  if (t.matches('input, textarea, select')) {
+    trackEvent('focus', {
+      field: t.name || t.id,
+      section: getSectionIndex(t)
+    });
+  }
+});
+
+// delegate typing events
+form.addEventListener('input', e => {
+  const t = e.target;
+  // skip file inputs (they don't fire "input")
+  if (t.matches('input:not([type="file"]), textarea, select')) {
+    trackEvent('input', {
+      field: t.name || t.id,
+      section: getSectionIndex(t)
+    });
+  }
+});
+
+// delegate file-picker changes
+form.addEventListener('change', e => {
+  const t = e.target;
+  if (t.matches('input[type="file"]')) {
+    trackEvent('change', {
+      field: t.name || 'images',
+      section: getSectionIndex(t),
+      count: t.files.length
+    });
+  }
+});
