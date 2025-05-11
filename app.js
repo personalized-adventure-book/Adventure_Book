@@ -253,45 +253,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const emailInput   = document.getElementById('email');
   const otherControls = Array.from(
     document.querySelectorAll(
-      '#adventureForm input, #adventureForm textarea, #adventureForm select, ' +
+      '#adventureForm input, #adventureForm textarea, #adventureForm select,' +
       '#addAdventureBtn, #createBookBtn'
     )
   ).filter(el => el.id !== 'email');
 
-  // 3a) disable them immediately
-  otherControls.forEach(el => el.disabled = true);
-
-  // helper: show a floating tooltip near `el`
-  function showTooltip(el, msg) {
-    const tip = document.createElement('div');
-    tip.className = 'field-tooltip';
-    tip.textContent = msg;
-    document.body.appendChild(tip);
-    const r = el.getBoundingClientRect();
-    tip.style.top  = `${window.scrollY + r.top - tip.offsetHeight - 6}px`;
-    tip.style.left = `${window.scrollX + r.left + (r.width - tip.offsetWidth)/2}px`;
-    requestAnimationFrame(() => tip.style.opacity = 1);
-    setTimeout(() => {
-      tip.style.opacity = 0;
-      tip.addEventListener('transitionend', () => tip.remove(), { once: true });
-    }, 1500);
+  // helper: disable + give a title
+  function lock(el) {
+    el.disabled = true;
+    el.setAttribute('title', 'Please enter a valid email first');
+  }
+  // helper: enable + remove that title
+  function unlock(el) {
+    el.disabled = false;
+    el.removeAttribute('title');
   }
 
-  // 3b) intercept any clicks on the disabled controls
-  otherControls.forEach(el => {
-    el.addEventListener('click', e => {
-      if (el.disabled) {
-        e.preventDefault();
-        showTooltip(el, 'Please enter a valid email first');
-      }
-    });
+  // 3a) disable them initially
+  otherControls.forEach(lock);
+
+  // 4️⃣ watch email validity
+  emailInput.addEventListener('input', () => {
+    const valid = emailInput.checkValidity();
+    otherControls.forEach(el => valid ? unlock(el) : lock(el));
   });
 
-  // 4) watch the email field — only once it’s valid do we re-enable everything
-  emailInput.addEventListener('input', () => {
-    const ok = emailInput.checkValidity();
-    otherControls.forEach(el => el.disabled = !ok);
-  });
 });
 
 function preview(files, container) {
