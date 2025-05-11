@@ -4,7 +4,13 @@
 function getSessionId() {
   let sid = localStorage.getItem('adv_sessionId');
   if (!sid) {
-    sid = crypto.randomUUID();
+    // YYYYMMDD-HHMMSS-XYZ
+    const now = new Date()
+      .toISOString()               // "2025-05-11T14:23:34.123Z"
+      .replace(/[:.TZ]/g, '-')     // "2025-05-11-14-23-34-123-"
+      .replace(/-$/, '');          // drop trailing dash
+    const suffix = Math.floor(Math.random() * 900 + 100); // 100–999
+    sid = `${now}-${suffix}`;
     localStorage.setItem('adv_sessionId', sid);
   }
   return sid;
@@ -439,4 +445,10 @@ form.addEventListener('change', e => {
       count: t.files.length
     });
   }
+});
+
+window.addEventListener('load', () => {
+  const nav = performance.getEntriesByType('navigation')[0] || {};
+  const evt = (nav.type === 'reload') ? 'pageReload' : 'pageLoad';
+  trackEvent(evt);
 });
