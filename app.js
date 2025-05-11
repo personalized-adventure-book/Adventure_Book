@@ -263,6 +263,38 @@ document.addEventListener('DOMContentLoaded', () => {
     el.disabled = true;
     el.setAttribute('title', 'Please enter a valid email first');
   }
+
+  // simple floating tooltip for clicks
+  function showTooltip(el, msg) {
+    const tip = document.createElement('div');
+    tip.className = 'field-tooltip';
+    tip.textContent = msg;
+    document.body.appendChild(tip);
+
+    const r = el.getBoundingClientRect();
+    tip.style.position = 'absolute';
+    tip.style.top      = `${window.scrollY + r.top - tip.offsetHeight - 6}px`;
+    tip.style.left     = `${window.scrollX + r.left + (r.width-tip.offsetWidth)/2}px`;
+    tip.style.opacity  =  '0';
+    tip.style.transition = 'opacity .2s';
+    requestAnimationFrame(() => tip.style.opacity = '1');
+
+    setTimeout(() => {
+      tip.style.opacity = '0';
+      tip.addEventListener('transitionend', () => tip.remove(), { once: true });
+    }, 1500);
+  }
+
+  // after you lock() everything...
+  otherControls.forEach(el => {
+    el.addEventListener('click', e => {
+      if (el.disabled) {
+        e.preventDefault();
+        showTooltip(el, 'Please enter a valid email first');
+      }
+    });
+  });
+
   // helper: enable + remove that title
   function unlock(el) {
     el.disabled = false;
