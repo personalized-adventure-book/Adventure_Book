@@ -232,26 +232,37 @@ const initialLang = urlLang || 'en';
 apply(initialLang);
 });
 
-/* ---------- image preview ---------- */
 function preview(files, container) {
-Array.from(files).forEach(file => {
+  Array.from(files).forEach(file => {
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onload = e => {
-    const wrap = document.createElement('div');
-    wrap.className = 'image-container';
-    const img = document.createElement('img');
-    img.src = e.target.result;
-    img.alt = file.name;
-    const btn = document.createElement('button');
-    btn.className = 'remove-btn';
-    btn.textContent = '×';
-    btn.onclick = () => wrap.remove();
-    wrap.append(img, btn);
-    container.append(wrap);
+      const wrap = document.createElement('div');
+      wrap.className = 'image-container';
+
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = file.name;
+
+      const btn = document.createElement('button');
+      btn.className = 'remove-btn';
+      btn.textContent = '×';
+      btn.onclick = () => {
+        // find which adventure section this was in
+        const sectionIdx = getSectionIndex(wrap.closest('.adventure-section'));
+        trackEvent('delete image', {
+          field:    'images',
+          section:  sectionIdx,
+          filename: file.name
+        });
+        wrap.remove();
+      };
+
+      wrap.append(img, btn);
+      container.append(wrap);
     };
     reader.readAsDataURL(file);
-});
+  });
 }
 
 function renumber() {
@@ -297,11 +308,27 @@ sec.innerHTML = `
 $('adventureList').append(sec);
 
 // remove button
-sec.querySelector('.remove-adventure').onclick = () => { sec.remove(); renumber(); };
+sec.querySelector('.remove-adventure').onclick = () => {
+  // 1) figure out which slot this is
+  const sectionIdx = getSectionIndex(sec);
+
+  // 2) fire your tracking call
+  trackEvent('delete adventure', {
+    action:  'removeAdventure',
+    section: sectionIdx
+  });
+
+  // 3) then actually remove it
+  sec.remove();
+
+  // 4) and finally renumber the remaining ones
+  renumber();
+};
 
 const dz = sec.querySelector('.drop-zone');
 const inp = dz.querySelector('input[type=file]');
 const prev = sec.querySelector('.image-preview');
+
 inp.addEventListener('change', e => { preview(e.target.files, prev); 
     //inp.value = ''; 
 });
@@ -439,13 +466,14 @@ form.addEventListener('focusin', e => {
   }
 });
 
-// delegate typing events
+// delegate typing events, but only when there's some non-empty content
 form.addEventListener('input', e => {
   const t = e.target;
-  // skip file inputs (they don't fire "input")
   if (t.matches('input:not([type="file"]), textarea, select')) {
+    const val = t.value.trim();
+    if (!val) return;                  // ← bail out if now empty
     trackEvent('input', {
-      field: t.name || t.id,
+      field:   t.name || t.id,
       section: getSectionIndex(t)
     });
   }
