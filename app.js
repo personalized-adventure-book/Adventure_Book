@@ -468,3 +468,9 @@ window.addEventListener('load', () => {
   const evt = (nav.type === 'reload') ? 'pageReload' : 'pageLoad';
   trackEvent(evt);
 });
+
+$('createBookBtn').addEventListener('click', () => {
+  trackEvent('submit essay', {
+    adventureCount: document.querySelectorAll('.adventure-section').length
+  });
+});
