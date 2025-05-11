@@ -1,3 +1,46 @@
+
+
+// Get or create a per‐visitor sessionId
+function getSessionId() {
+  let sid = localStorage.getItem('adv_sessionId');
+  if (!sid) {
+    sid = crypto.randomUUID();
+    localStorage.setItem('adv_sessionId', sid);
+  }
+  return sid;
+}
+const sessionId = getSessionId();
+
+function trackEvent(eventType, details = {}) {
+  const payload = { sessionId, eventType, details };
+  fetch('https://script.google.com/macros/s/…/exec', {
+    method: 'POST',
+    mode:   'no-cors',   // fire‐and‐forget, no preflight
+    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+    body: JSON.stringify(payload)
+  });
+}
+
+
+// 1) Track page loads
+window.addEventListener('load', () => trackEvent('pageLoad'));
+
+// 2) Track focus on the “name” field
+document.getElementById('name')
+        .addEventListener('focus', () => trackEvent('focus', { field: 'name' }));
+
+// 3) Track every keystroke in email (for demo, we’ll only log the field name, not full content)
+document.getElementById('email')
+        .addEventListener('input', () => trackEvent('input', { field: 'email' }));
+
+// 4) Track clicks on “Add Adventure”
+document.getElementById('addAdventureBtn')
+        .addEventListener('click', () => trackEvent('click', { button: 'addAdventure' }));
+
+// 5) Track form submission
+document.getElementById('adventureForm')
+        .addEventListener('submit', () => trackEvent('submit', { form: 'adventureForm' }));
+
 // ▶︎ visitor‐counter ping
 window.addEventListener('load', () => {
     console.log("i entered");
@@ -364,7 +407,7 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
             <p>Your order has been received.<br>
             ✉️ Check your inbox for your confirmation email.</p>
             <p style="margin-top: 20px;">
-              <a href="https://www.instagram.com/anything.personalized/" target="_blank"
+              <a href="https://www.instagram.com/personalized_adventure_book/" target="_blank"
                  style="display: inline-block; padding: 12px 20px; background: #E1306C;
                         color: #fff; border-radius: 8px; font-weight: bold; text-decoration: none;">
                 📸 Follow us on Instagram
