@@ -250,7 +250,8 @@ document.querySelectorAll('input[required], textarea[required], select[required]
   });
 
   // 3) grab everything except the email field
-  const emailInput   = document.getElementById('email');
+  // grab everything except email just like before
+  const emailInput = document.getElementById('email');
   const otherControls = Array.from(
     document.querySelectorAll(
       '#adventureForm input, #adventureForm textarea, #adventureForm select,' +
@@ -258,49 +259,52 @@ document.querySelectorAll('input[required], textarea[required], select[required]
     )
   ).filter(el => el.id !== 'email');
 
-  // helper: disable + give a title
+  /**
+   * Disables the element and (once) adds an <abbr class="info">⚠️</abbr>
+   * right after it with our tooltip text.
+   */
   function lock(el) {
     el.disabled = true;
-    el.setAttribute('title', 'Please enter a valid email first');
+    // only add one info‐icon
+    if (!el.nextElementSibling || !el.nextElementSibling.classList.contains('info')) {
+      const info = document.createElement('abbr');
+      info.className = 'info';
+      info.setAttribute('data-tooltip', 'Please enter a valid email first');
+      info.textContent = '⚠️';
+      el.parentNode.insertBefore(info, el.nextSibling);
+    }
   }
 
-  // simple floating tooltip for clicks
-// replace your existing showTooltip(...) with this:
-function showTooltip(el, msg) {
-  // create a little icon exactly like your required-* abbr
-  const ab = document.createElement('abbr');
-  ab.className = 'required';
-  ab.setAttribute('data-tooltip', msg);
-  ab.textContent = '❗';        // you can use any character you like here
-  // insert it right after the control
-  el.parentNode.insertBefore(ab, el.nextSibling);
-  // remove after 1.5s
-  setTimeout(() => ab.remove(), 1500);
-}
+  /**
+   * Enables the element and removes the info icon if present.
+   */
+  function unlock(el) {
+    el.disabled = false;
+    if (el.nextElementSibling && el.nextElementSibling.classList.contains('info')) {
+      el.nextElementSibling.remove();
+    }
+  }
 
-  // after you lock() everything...
+  // initially lock them all
+  otherControls.forEach(lock);
+
+  // when email becomes valid, unlock; otherwise lock
+  emailInput.addEventListener('input', () => {
+    otherControls.forEach(el =>
+      emailInput.checkValidity() ? unlock(el) : lock(el)
+    );
+  });
+
+  // still keep your “click” guard so that tapping a disabled control
+  // also shows the floating tooltip (optional now that we have hover)
   otherControls.forEach(el => {
     el.addEventListener('click', e => {
       if (el.disabled) {
         e.preventDefault();
-        showTooltip(el, 'Please enter a valid email first');
+        // you can reuse your existing showTooltip(el, msg),
+        // but now the little ⚠️ is right there and will show on hover.
       }
     });
-  });
-
-  // helper: enable + remove that title
-  function unlock(el) {
-    el.disabled = false;
-    el.removeAttribute('title');
-  }
-
-  // 3a) disable them initially
-  otherControls.forEach(lock);
-
-  // 4️⃣ watch email validity
-  emailInput.addEventListener('input', () => {
-    const valid = emailInput.checkValidity();
-    otherControls.forEach(el => valid ? unlock(el) : lock(el));
   });
 
 });

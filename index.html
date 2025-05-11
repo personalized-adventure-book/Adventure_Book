@@ -168,6 +168,38 @@
       z-index: 1000;
     }
 
+    /* an inline info‐icon next to each disabled control */
+    abbr.info {
+      position: relative;
+      display: inline-block;
+      margin-left: 6px;
+      cursor: help;
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    /* no transition = show instantly */
+    abbr.info::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 4px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      font-size: 0.75rem;
+      pointer-events: none;
+      opacity: 0;
+      /* remove the fade-in delay: */
+      /* transition: opacity .2s; */
+    }
+
+    abbr.info:hover::after {
+      opacity: 1;
+    }
 /* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
   </style>
 
