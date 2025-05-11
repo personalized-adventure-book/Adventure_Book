@@ -130,18 +130,27 @@
       opacity: 0;
       cursor: pointer;
     }
-    /* style the little red star and give it a help cursor */
+    
     abbr.required {
-      text-decoration: none;
-      border: none;
-      color: red;
+      position: relative;       /* create a positioning context */
+      text-decoration: none;    /* we already style the “*” in red */
       cursor: help;
-      margin-left: 4px;
     }
 
-    /* optional: make the native title tooltip look a bit nicer on desktop */
-    abbr.required[title] {
-      position: relative;
+    abbr.required:hover::after {
+      content: attr(title);     /* pull in the title text */
+      position: absolute;
+      bottom: 100%;             /* position above the star */
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 4px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      font-size: 0.75rem;
+      pointer-events: none;     /* keep the hover state */
+      z-index: 10;
     }
 
 /* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
