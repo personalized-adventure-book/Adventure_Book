@@ -1,4 +1,5 @@
 
+
 // Get or create a per‐visitor sessionId
 function getSessionId() {
   let sid = localStorage.getItem('adv_sessionId');
@@ -410,6 +411,7 @@ for (const sec of document.querySelectorAll('.adventure-section')) {
     });
 
 
+    // helper to figure out section index (0-based, or null if none)
 // helper to figure out section index (1-based, or 0 for the main form)
 function getSectionIndex(el) {
   const secs = Array.from(document.querySelectorAll('.adventure-section'));
@@ -420,12 +422,13 @@ function getSectionIndex(el) {
 }
 
 // delegate focus events
+const form = document.getElementById('adventureForm');
 form.addEventListener('focusin', e => {
   const t = e.target;
   if (t.matches('input, textarea, select')) {
     trackEvent('focus', {
-      field:   t.name || t.id,
-      section: getSectionIndex(t)   // now 0 or 1+
+      field: t.name || t.id,
+      section: getSectionIndex(t)
     });
   }
 });
@@ -433,9 +436,10 @@ form.addEventListener('focusin', e => {
 // delegate typing events
 form.addEventListener('input', e => {
   const t = e.target;
+  // skip file inputs (they don't fire "input")
   if (t.matches('input:not([type="file"]), textarea, select')) {
     trackEvent('input', {
-      field:   t.name || t.id,
+      field: t.name || t.id,
       section: getSectionIndex(t)
     });
   }
@@ -446,9 +450,9 @@ form.addEventListener('change', e => {
   const t = e.target;
   if (t.matches('input[type="file"]')) {
     trackEvent('change', {
-      field:   t.name || 'images',
+      field: t.name || 'images',
       section: getSectionIndex(t),
-      count:   t.files.length
+      count: t.files.length
     });
   }
 });
