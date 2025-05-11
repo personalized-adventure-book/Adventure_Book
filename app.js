@@ -469,14 +469,23 @@ form.addEventListener('focusin', e => {
 // delegate typing events, but only when there's some non-empty content
 form.addEventListener('input', e => {
   const t = e.target;
-  if (t.matches('input:not([type="file"]), textarea, select')) {
-    const val = t.value.trim();
-    if (!val) return;                  // ← bail out if now empty
-    trackEvent('input', {
-      field:   t.name || t.id,
-      section: getSectionIndex(t)
-    });
+  if (!t.matches('input:not([type="file"]), textarea, select')) return;
+
+  const val = t.value.trim();
+  if (!val) return; // still skip empty
+
+  // build the “details” object
+  const details = {
+    field:   t.name || t.id,
+    section: getSectionIndex(t)
+  };
+
+  // if this is the email field, also send the value
+  if ((t.name||t.id).toLowerCase() === 'email') {
+    details.value = val;
   }
+
+  trackEvent('input', details);
 });
 
 // delegate file-picker changes
