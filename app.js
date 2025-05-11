@@ -2,17 +2,21 @@
 
 // Get or create a per‐visitor sessionId
 function getSessionId() {
+  const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   let sid = localStorage.getItem('adv_sessionId');
-  if (!sid) {
+
+  // if we don’t have one, or it’s the old UUID format, regenerate
+  if (!sid || uuidRe.test(sid)) {
     // YYYYMMDD-HHMMSS-XYZ
     const now = new Date()
-      .toISOString()               // "2025-05-11T14:23:34.123Z"
-      .replace(/[:.TZ]/g, '-')     // "2025-05-11-14-23-34-123-"
-      .replace(/-$/, '');          // drop trailing dash
-    const suffix = Math.floor(Math.random() * 900 + 100); // 100–999
+      .toISOString()
+      .replace(/[:.TZ]/g, '-')
+      .replace(/-$/, '');
+    const suffix = Math.floor(Math.random() * 900 + 100);
     sid = `${now}-${suffix}`;
     localStorage.setItem('adv_sessionId', sid);
   }
+
   return sid;
 }
 const sessionId = getSessionId();
