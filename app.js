@@ -13,7 +13,7 @@ const sessionId = getSessionId();
 
 function trackEvent(eventType, details = {}) {
   const payload = { sessionId, eventType, details };
-  fetch('https://script.google.com/macros/s/…/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
     method: 'POST',
     mode:   'no-cors',   // fire‐and‐forget, no preflight
     headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
