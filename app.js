@@ -265,25 +265,18 @@ document.querySelectorAll('input[required], textarea[required], select[required]
   }
 
   // simple floating tooltip for clicks
-  function showTooltip(el, msg) {
-    const tip = document.createElement('div');
-    tip.className = 'field-tooltip';
-    tip.textContent = msg;
-    document.body.appendChild(tip);
-
-    const r = el.getBoundingClientRect();
-    tip.style.position = 'absolute';
-    tip.style.top      = `${window.scrollY + r.top - tip.offsetHeight - 6}px`;
-    tip.style.left     = `${window.scrollX + r.left + (r.width-tip.offsetWidth)/2}px`;
-    tip.style.opacity  =  '0';
-    tip.style.transition = 'opacity .2s';
-    requestAnimationFrame(() => tip.style.opacity = '1');
-
-    setTimeout(() => {
-      tip.style.opacity = '0';
-      tip.addEventListener('transitionend', () => tip.remove(), { once: true });
-    }, 1500);
-  }
+// replace your existing showTooltip(...) with this:
+function showTooltip(el, msg) {
+  // create a little icon exactly like your required-* abbr
+  const ab = document.createElement('abbr');
+  ab.className = 'required';
+  ab.setAttribute('data-tooltip', msg);
+  ab.textContent = '❗';        // you can use any character you like here
+  // insert it right after the control
+  el.parentNode.insertBefore(ab, el.nextSibling);
+  // remove after 1.5s
+  setTimeout(() => ab.remove(), 1500);
+}
 
   // after you lock() everything...
   otherControls.forEach(el => {
