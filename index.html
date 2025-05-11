@@ -130,6 +130,21 @@
       opacity: 0;
       cursor: pointer;
     }
+    /* style the little red star and give it a help cursor */
+    abbr.required {
+      text-decoration: none;
+      border: none;
+      color: red;
+      cursor: help;
+      margin-left: 4px;
+    }
+
+    /* optional: make the native title tooltip look a bit nicer on desktop */
+    abbr.required[title] {
+      position: relative;
+    }
+
+/* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
   </style>
 
 </head>
@@ -153,13 +168,14 @@
     <form id="adventureForm">
       <div class="form-row">
         <div class="form-group">
-          <label id="labelName" for="name"></label>
-          <input id="name" name="name" required />
-        </div>
-        <div class="form-group">
           <label id="labelEmail" for="email"></label>
           <input id="email" name="email" required />
         </div>
+        <div class="form-group">
+          <label id="labelName" for="name"></label>
+          <input id="name" name="name" required />
+        </div>
+
         <div class="form-group">
           <label id="labelChildName" for="childName"></label>
           <input id="childName" name="childName" required />
@@ -168,20 +184,21 @@
       <div class="form-row">
         <div class="form-group">
           <label id="labelAge" for="age"></label>
-          <input id="age"      name="age"      placeholder="" type="number" min="1" required />        </div>
+          <input id="age"      name="age"      placeholder="" type="number" min="1" />       
+       </div>
         <div class="form-group">
           <label id="labelBookLang" for="bookLang"></label>
-          <input id="bookLang" name="bookLang" placeholder="" required />
+          <input id="bookLang" name="bookLang" placeholder="" />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label id="labelCountry" for="country"></label>
-          <input id="country" name="country" required />
+          <input id="country" name="country" />
         </div>
         <div class="form-group">
           <label id="labelCity" for="city"></label>
-          <input id="city" name="city" required />
+          <input id="city" name="city" />
         </div>
       </div>
       <div class="form-group">

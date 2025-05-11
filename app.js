@@ -1,5 +1,20 @@
 
-
+// find every input[required], locate its label[for], and append a <abbr> if not already there
+document.querySelectorAll('input[required], textarea[required], select[required]')
+  .forEach(input => {
+    const id = input.id;
+    if (!id) return;
+    const lbl = document.querySelector(`label[for="${id}"]`);
+    if (!lbl) return;
+    // avoid double-adding
+    if (lbl.querySelector('abbr.required')) return;
+    const star = document.createElement('abbr');
+    star.className = 'required';
+    star.title = 'This field is required';
+    star.textContent = '*';
+    lbl.appendChild(star);
+  });
+  
 // Get or create a per‐visitor sessionId
 function getSessionId() {
   const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
