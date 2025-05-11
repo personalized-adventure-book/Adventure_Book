@@ -1,3 +1,13 @@
+// ▶︎ visitor‐counter ping
+window.addEventListener('load', () => {
+    fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
+      method: 'GET',
+      mode:   'no-cors'     // we don't care about the response body
+    })
+    .then(() => console.log('✅ Visit counted'))
+    .catch(err => console.warn('Visitor ping failed', err));
+  });
+  
 /* ---------- shorthand ---------- */
 const $ = id => document.getElementById(id);
 
