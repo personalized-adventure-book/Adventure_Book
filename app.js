@@ -236,21 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
   apply(initialLang);
 
   // 2) add little red “*” to every required label
-document.querySelectorAll('input[required], textarea[required], select[required]')
-  .forEach(input => {
-    const id = input.id;
-    if (!id) return;
-    const lbl = document.querySelector(`label[for="${id}"]`);
-    if (!lbl || lbl.querySelector('abbr.required')) return;
-    const star = document.createElement('abbr');
-    star.className   = 'required';
-    star.setAttribute('data-tooltip', 'This field is required');
-    star.textContent = '*';
-    lbl.appendChild(star);
-  });
-
-  // 3) grab everything except the email field
-  // grab everything except email just like before
+document.addEventListener('DOMContentLoaded', () => {
   const emailInput = document.getElementById('email');
   const otherControls = Array.from(
     document.querySelectorAll(
@@ -259,55 +245,16 @@ document.querySelectorAll('input[required], textarea[required], select[required]
     )
   ).filter(el => el.id !== 'email');
 
-  /**
-   * Disables the element and (once) adds an <abbr class="info">⚠️</abbr>
-   * right after it with our tooltip text.
-   */
-  function lock(el) {
-    el.disabled = true;
-    // only add one info‐icon
-    if (!el.nextElementSibling || !el.nextElementSibling.classList.contains('info')) {
-      const info = document.createElement('abbr');
-      info.className = 'info';
-      info.setAttribute('data-tooltip', 'Please enter a valid email first');
-      info.textContent = '';
-      el.parentNode.insertBefore(info, el.nextSibling);
-    }
-  }
+  // 1️⃣ disable everything except email
+  otherControls.forEach(el => el.disabled = true);
 
-  /**
-   * Enables the element and removes the info icon if present.
-   */
-  function unlock(el) {
-    el.disabled = false;
-    if (el.nextElementSibling && el.nextElementSibling.classList.contains('info')) {
-      el.nextElementSibling.remove();
-    }
-  }
-
-  // initially lock them all
-  otherControls.forEach(lock);
-
-  // when email becomes valid, unlock; otherwise lock
+  // 2️⃣ when email is valid, toggle others
   emailInput.addEventListener('input', () => {
-    otherControls.forEach(el =>
-      emailInput.checkValidity() ? unlock(el) : lock(el)
-    );
+    const valid = emailInput.checkValidity();
+    otherControls.forEach(el => el.disabled = !valid);
   });
-
-  // still keep your “click” guard so that tapping a disabled control
-  // also shows the floating tooltip (optional now that we have hover)
-  otherControls.forEach(el => {
-    el.addEventListener('click', e => {
-      if (el.disabled) {
-        e.preventDefault();
-        // you can reuse your existing showTooltip(el, msg),
-        // but now the little ⚠️ is right there and will show on hover.
-      }
-    });
-  });
-
 });
+
 
 function preview(files, container) {
   Array.from(files).forEach(file => {

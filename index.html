@@ -169,21 +169,24 @@
     }
 
     /* an inline info‐icon next to each disabled control */
+    /* base styling — keep it hidden until the input is disabled */
     abbr.info {
       position: relative;
-      display: inline-block;
-      margin-left: 6px;
+      visibility: hidden;
       cursor: help;
-      color: var(--secondary);
-      text-decoration: none;
+      margin-left: 6px;
     }
-
-    /* no transition = show instantly */
+    /* show the ⚠️ via ::before */
+    abbr.info::before {
+      content: "⚠️";
+      font-size: 1rem;
+      line-height: 1;
+    }
+    /* tooltip bubble on hover, instant */
     abbr.info::after {
       content: attr(data-tooltip);
       position: absolute;
-      bottom: 100%;
-      left: 50%;
+      bottom: 100%; left: 50%;
       transform: translateX(-50%) translateY(-6px);
       background: rgba(0,0,0,0.8);
       color: #fff;
@@ -191,14 +194,19 @@
       border-radius: 4px;
       white-space: nowrap;
       font-size: 0.75rem;
+      visibility: hidden; opacity: 0;
       pointer-events: none;
-      opacity: 0;
-      /* remove the fade-in delay: */
-      /* transition: opacity .2s; */
+    }
+    /* on hover: show bubble instantly */
+    abbr.info:hover::after {
+      visibility: visible; opacity: 1;
     }
 
-    abbr.info:hover::after {
-      opacity: 1;
+    /* now when the preceding input is disabled, make the icon visible */
+    .form-group input:disabled + abbr.info,
+    .form-group textarea:disabled + abbr.info,
+    .form-group select:disabled + abbr.info {
+      visibility: visible;
     }
 /* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
   </style>
@@ -230,6 +238,8 @@
         <div class="form-group">
           <label id="labelName" for="name"></label>
           <input id="name" name="name" required />
+            <abbr class="info" data-tooltip="Please enter a valid email first"></abbr>
+
         </div>
 
         <div class="form-group">
