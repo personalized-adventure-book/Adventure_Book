@@ -263,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
       el.readOnly = true;
     } else {
-      // buttons, file inputs, selects: still disable to block
-      el.disabled = true;
+      // for all other elements, add the 'locked' class to visually lock them
+      el.classList.add('locked');
     }
     el.title = 'Please enter a valid email first';
   });
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
         el.readOnly = !ok;
       } else {
-        el.disabled = !ok;
+        el.classList.toggle('locked', !ok);
       }
       if (ok) {
         el.removeAttribute('title');
