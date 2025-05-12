@@ -241,7 +241,8 @@ document.getElementById('langSelect').addEventListener('change', e => apply(e.ta
 
 document.addEventListener('DOMContentLoaded', () => {
   // Apply initial language
-  const initialLang = localStorage.getItem('adv_lang') || 'en';
+  const urlLang = new URLSearchParams(window.location.search).get('lang');
+  const initialLang = (urlLang && translations[urlLang]) ? urlLang : 'en';
   apply(initialLang);
 
   // Inject red stars for required fields
