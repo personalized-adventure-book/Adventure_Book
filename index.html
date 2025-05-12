@@ -272,7 +272,27 @@
       </div>
 
       <p class="instructions" id="instructions"></p>
-      <div id="adventureList"></div>
+      <div id="adventureList">
+        <div class="adventure-section">
+          <div class="adventure-title">Adventure 1</div>
+          <div class="form-group">
+            <label>Name</label>
+            <input name="advName" placeholder="e.g., Dragon’s Cave" required />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="advDesc" rows="4" placeholder="Tell your story…" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Images</label>
+            <div class="drop-zone">
+              <span>Drag & drop or click to select images</span>
+              <input type="file" accept="image/*" multiple />
+            </div>
+            <div class="image-preview"></div>
+          </div>
+        </div>
+      </div>
 
       <button type="button" id="addAdventureBtn"></button>
       <button type="submit" id="createBookBtn"></button>
