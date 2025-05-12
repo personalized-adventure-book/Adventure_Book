@@ -231,50 +231,33 @@ document.querySelectorAll('.adventure-section').forEach((sec, i) => {
 document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1) initial language and translations
-  const urlLang     = new URLSearchParams(window.location.search).get('lang');
-  const initialLang = urlLang || 'en';
-  apply(initialLang);
-
-  // 2) add red * to required labels
-  document.querySelectorAll('input[required], textarea[required], select[required]')
-    .forEach(input => {
-      const id = input.id;
-      if (!id) return;
-      const lbl = document.querySelector(`label[for="${id}"]`);
-      if (!lbl || lbl.querySelector('abbr.required')) return;
-      const star = document.createElement('abbr');
-      star.className   = 'required';
-      star.setAttribute('data-tooltip', 'This field is required');
-      star.textContent = '*';
-      lbl.appendChild(star);
-    });
-
-  // 3) lock all except email
   const emailInput = document.getElementById('email');
-  const others = Array.from(
+  const otherControls = Array.from(
     document.querySelectorAll(
       '#adventureForm input, #adventureForm textarea, #adventureForm select, ' +
       '#addAdventureBtn, #createBookBtn'
     )
   ).filter(el => el.id !== 'email');
 
-  others.forEach(el => {
+  // 1️⃣ disable everything except the email, and set a title on each
+  otherControls.forEach(el => {
     el.disabled = true;
-    el.setAttribute('data-tooltip', 'Please enter a valid email first');
+    el.title = 'Please enter a valid email first';
   });
 
-  // 4) unlock on valid email
+  // 2️⃣ watch email validity: toggle disabled + title
   emailInput.addEventListener('input', () => {
     const ok = emailInput.checkValidity();
-    others.forEach(el => {
+    otherControls.forEach(el => {
       el.disabled = !ok;
-      if (ok) el.removeAttribute('data-tooltip');
-      else el.setAttribute('data-tooltip', 'Please enter a valid email first');
+      if (ok) {
+        el.removeAttribute('title');
+      } else {
+        el.title = 'Please enter a valid email first';
+      }
     });
   });
 });
-
 
 function preview(files, container) {
   Array.from(files).forEach(file => {
