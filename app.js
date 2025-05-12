@@ -66,6 +66,7 @@ en: {
     placeholderAge:     "e.g., 4",
     labelBookLang:      "Book Language",
     placeholderBookLang:"e.g., English, French",
+    instructions: "The more adventures you add, the better we can tailor your book. We recommend adding as many details and images as you'd like — images help bring the story to life!",
 
     labelCountry: "Country Address", placeholderCountry: "e.g., United States",
     labelCity: "City Address", placeholderCity: "e.g., New York",
@@ -83,9 +84,10 @@ es: {
     labelEmail: "Correo electrónico", placeholderEmail: "maria@ejemplo.com",
     labelChildName: "Nombre del niño", placeholderChildName: "ej. Diego",
     labelAge:           "Edad del niño",
-	placeholderAge:     "p.ej., 4",
-     labelBookLang:      "Idioma del libro",
-     placeholderBookLang:"p.ej., Español, Inglés",
+    placeholderAge:     "p.ej., 4",
+    labelBookLang:      "Idioma del libro",
+    placeholderBookLang:"p.ej., Español, Inglés",
+    instructions: "¡Cuantas más aventuras añadas, mejor podremos personalizar tu libro! Te recomendamos agregar tantos detalles e imágenes como desees: ¡las imágenes ayudan a dar vida a la historia!",
 
     labelCountry: "Dirección del país", placeholderCountry: "ej. España",
     labelCity: "Dirección de la ciudad", placeholderCity: "ej. Barcelona",
@@ -107,6 +109,7 @@ fr: {
     placeholderAge:     "ex. 4",
     labelBookLang:      "Langue du livre",
     placeholderBookLang:"ex. Français, Anglais",
+    instructions: "Plus vous ajoutez d'aventures, mieux nous pourrons personnaliser votre livre. Nous vous recommandons d'ajouter autant de détails et d'images que vous le souhaitez — les images aident à donner vie à l'histoire !",
 
     labelCountry: "Adresse du pays", placeholderCountry: "ex. France",
     labelCity: "Adresse de la ville", placeholderCity: "ex. Paris",
@@ -127,6 +130,7 @@ de: {
     placeholderAge:     "z. B. 4",
     labelBookLang:      "Buchsprache",
     placeholderBookLang:"z. B. Deutsch, Englisch",
+    instructions: "Je mehr Abenteuer du hinzufügst, desto besser können wir dein Buch gestalten. Wir empfehlen, so viele Details und Bilder wie möglich hinzuzufügen – Bilder erwecken die Geschichte zum Leben!",
 
     labelCountry: "Landadresse", placeholderCountry: "z.B. Deutschland",
     labelCity: "Stadtadresse", placeholderCity: "z.B. Berlin",
@@ -147,6 +151,7 @@ it: {
     placeholderAge:     "es. 4",
     labelBookLang:      "Lingua del libro",
     placeholderBookLang:"es. Italiano, Inglese",
+    instructions: "Più avventure aggiungi, meglio potremo personalizzare il tuo libro. Ti consigliamo di inserire quanti più dettagli e immagini desideri: le immagini aiutano a rendere la storia ancora più viva!",
 
     labelCountry: "Indirizzo del paese", placeholderCountry: "es. Italia",
     labelCity: "Indirizzo della città", placeholderCity: "es. Roma",
@@ -167,6 +172,7 @@ ru: {
     placeholderAge:     "напр., 4",
     labelBookLang:      "Язык книги",
     placeholderBookLang:"напр., Русский, Английский",
+    instructions: "Чем больше приключений вы добавите, тем лучше мы сможем персонализировать вашу книгу. Рекомендуем добавлять как можно больше подробностей и изображений — изображения помогают оживить историю!",
 
     labelCountry: "Адрес страны", placeholderCountry: "например, Россия",
     labelCity: "Адрес города", placeholderCity: "например, Москва",
@@ -187,6 +193,7 @@ ar: {
     placeholderAge:     "مثال: 4",
     labelBookLang:      "لغة الكتاب",
     placeholderBookLang:"مثال: العربية، الإنجليزية",
+    instructions: "كلما أضفت مغامرات أكثر، استطعنا تخصيص كتابك بشكل أفضل. ننصحك بإضافة أكبر قدر ممكن من التفاصيل والصور — فالصور تُضفي الحياة على القصة!",
 
     labelCountry: "عنوان الدولة", placeholderCountry: "مثال: مصر",
     labelCity: "عنوان المدينة", placeholderCity: "مثال: القاهرة",
@@ -200,41 +207,45 @@ ar: {
 };
 
 function apply(lang) {
-if (!translations[lang]) lang = 'en';
-const t = translations[lang];
+  if (!translations[lang]) lang = 'en';
+  const t = translations[lang];
 
-$('langSelect').value    = lang;
-$('title').textContent   = t.title;
-$('subtitle').textContent= t.subtitle;
-$('labelName').textContent      = t.labelName;
-$('name').placeholder           = t.placeholderName;
-$('labelEmail').textContent     = t.labelEmail;
-$('email').placeholder          = t.placeholderEmail;
-$('labelChildName').textContent = t.labelChildName;
-$('childName').placeholder      = t.placeholderChildName;
-$('labelCountry').textContent   = t.labelCountry;
-$('country').placeholder        = t.placeholderCountry;
-$('labelCity').textContent      = t.labelCity;
-$('city').placeholder           = t.placeholderCity;
-$('labelTravel').textContent    = t.labelTravel;
-$('destination').placeholder    = t.placeholderTravel;
-$('addAdventureBtn').textContent = t.addAdventure;
-$('createBookBtn').textContent   = t.createBook;
-$('labelAge').textContent       = t.labelAge;
-$('age').placeholder            = t.placeholderAge;
+  $('langSelect').value    = lang;
+  $('title').textContent   = t.title;
+  $('subtitle').textContent= t.subtitle;
+  $('labelName').textContent      = t.labelName;
+  $('name').placeholder           = t.placeholderName;
+  $('labelEmail').textContent     = t.labelEmail;
+  $('email').placeholder          = t.placeholderEmail;
+  $('labelChildName').textContent = t.labelChildName;
+  $('childName').placeholder      = t.placeholderChildName;
+  $('labelCountry').textContent   = t.labelCountry;
+  $('country').placeholder        = t.placeholderCountry;
+  $('labelCity').textContent      = t.labelCity;
+  $('city').placeholder           = t.placeholderCity;
+  $('labelTravel').textContent    = t.labelTravel;
+  $('destination').placeholder    = t.placeholderTravel;
+  $('addAdventureBtn').textContent = t.addAdventure;
+  $('createBookBtn').textContent   = t.createBook;
+  $('labelAge').textContent       = t.labelAge;
+  $('age').placeholder            = t.placeholderAge;
 
-$('labelBookLang').textContent  = t.labelBookLang;
-$('bookLang').placeholder       = t.placeholderBookLang;
+  $('labelBookLang').textContent  = t.labelBookLang;
+  $('bookLang').placeholder       = t.placeholderBookLang;
 
-document.querySelectorAll('.adventure-section').forEach((sec, i) => {
-    sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
-    const span = sec.querySelector('.drop-zone span');
-    if (span) span.textContent = t.dragDrop;
-    const inputs = sec.querySelectorAll('.form-group');
-    if (inputs[0]) inputs[0].querySelector('label').textContent = t.labelAdvName;
-    if (inputs[1]) inputs[1].querySelector('label').textContent = t.labelAdvDesc;
-    if (inputs[2]) inputs[2].querySelector('label').textContent = t.labelAdvImages;
-});
+  // update the instructions text
+  const inst = document.getElementById('instructions');
+  if (inst) inst.textContent = t.instructions;
+
+  document.querySelectorAll('.adventure-section').forEach((sec, i) => {
+      sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
+      const span = sec.querySelector('.drop-zone span');
+      if (span) span.textContent = t.dragDrop;
+      const inputs = sec.querySelectorAll('.form-group');
+      if (inputs[0]) inputs[0].querySelector('label').textContent = t.labelAdvName;
+      if (inputs[1]) inputs[1].querySelector('label').textContent = t.labelAdvDesc;
+      if (inputs[2]) inputs[2].querySelector('label').textContent = t.labelAdvImages;
+  });
 }
 
 document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
