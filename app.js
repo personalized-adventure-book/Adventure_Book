@@ -307,22 +307,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ─── Initialize image preview for existing adventure sections ───
+  // ─── Initialize existing (static) adventure-section drop-zones ───
   document.querySelectorAll('.adventure-section').forEach(sec => {
     const dz   = sec.querySelector('.drop-zone');
     const inp  = dz.querySelector('input[type="file"]');
     const prev = sec.querySelector('.image-preview');
-    // file change
-    inp.addEventListener('change', e => {
-      preview(e.target.files, prev);
-      inp.value = '';
-    });
-    // click to open picker
-    dz.addEventListener('click', e => {
-      if (e.target === dz) inp.click();
-    });
-    // drag & drop
-    ['dragover', 'dragleave', 'drop'].forEach(evt => {
+    if (!inp) return;
+    inp.addEventListener('change', e => { preview(e.target.files, prev); });
+    dz.addEventListener('click', e => { if (e.target === dz) inp.click(); });
+    ['dragover','dragleave','drop'].forEach(evt => {
       dz.addEventListener(evt, e => {
         e.preventDefault();
         dz.classList.toggle('drop-zone--over', evt === 'dragover');
