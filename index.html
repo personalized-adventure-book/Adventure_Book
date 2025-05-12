@@ -168,41 +168,6 @@
       z-index: 1000;
     }
 
-    /* base tooltip styles on any element with a data-tooltip attr */
-    [data-tooltip] {
-      position: relative;
-      cursor: help;              /* show the “?” cursor on hover */
-    }
-
-    /* the tooltip bubble */
-    [data-tooltip]:hover::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 100%;              /* place above the control */
-      left: 50%;
-      transform: translateX(-50%) translateY(-6px);
-      background: rgba(0,0,0,0.8);
-      color: #fff;
-      padding: 4px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-      font-size: 0.75rem;
-      pointer-events: none;
-      z-index: 100;
-    }
-
-    /* little arrow pointer */
-    [data-tooltip]:hover::before {
-      content: "";
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%) translateY(2px);
-      border: 5px solid transparent;
-      border-top-color: rgba(0,0,0,0.8);
-      pointer-events: none;
-      z-index: 100;
-    }
 /* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
   </style>
 
