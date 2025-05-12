@@ -229,12 +229,6 @@ document.querySelectorAll('.adventure-section').forEach((sec, i) => {
 }
 
 document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) pick up initial language & populate UI
-  const urlLang     = new URLSearchParams(window.location.search).get('lang');
-  const initialLang = urlLang || 'en';
-  apply(initialLang);
-
   // 2) add little red “*” to every required label
 document.addEventListener('DOMContentLoaded', () => {
   const emailInput = document.getElementById('email');
@@ -535,3 +529,4 @@ $('createBookBtn').addEventListener('click', () => {
     adventureCount: document.querySelectorAll('.adventure-section').length
   });
 });
+
