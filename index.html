@@ -168,45 +168,40 @@
       z-index: 1000;
     }
 
-    /* an inline info‐icon next to each disabled control */
-    /* base styling — keep it hidden until the input is disabled */
-    abbr.info {
+    /* base tooltip styles on any element with a data-tooltip attr */
+    [data-tooltip] {
       position: relative;
-      visibility: hidden;
-      cursor: help;
-      margin-left: 6px;
+      cursor: help;              /* show the “?” cursor on hover */
     }
-    /* show the ⚠️ via ::before */
-    abbr.info::before {
-      content: "⚠️";
-      font-size: 1rem;
-      line-height: 1;
-    }
-    /* tooltip bubble on hover, instant */
-    abbr.info::after {
+
+    /* the tooltip bubble */
+    [data-tooltip]:hover::after {
       content: attr(data-tooltip);
       position: absolute;
-      bottom: 100%; left: 50%;
+      bottom: 100%;              /* place above the control */
+      left: 50%;
       transform: translateX(-50%) translateY(-6px);
       background: rgba(0,0,0,0.8);
       color: #fff;
-      padding: 4px 6px;
+      padding: 4px 8px;
       border-radius: 4px;
       white-space: nowrap;
       font-size: 0.75rem;
-      visibility: hidden; opacity: 0;
       pointer-events: none;
-    }
-    /* on hover: show bubble instantly */
-    abbr.info:hover::after {
-      visibility: visible; opacity: 1;
+      z-index: 100;
     }
 
-    /* now when the preceding input is disabled, make the icon visible */
-    .form-group input:disabled + abbr.info,
-    .form-group textarea:disabled + abbr.info,
-    .form-group select:disabled + abbr.info {
-      visibility: visible;
+    /* little arrow pointer */
+    [data-tooltip]:hover::before {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(2px);
+      border: 5px solid transparent;
+      border-top-color: rgba(0,0,0,0.8);
+      pointer-events: none;
+      z-index: 100;
     }
 /* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
   </style>

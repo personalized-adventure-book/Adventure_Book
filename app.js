@@ -232,20 +232,31 @@ document.getElementById('langSelect').addEventListener('change', e => apply(e.ta
   // 2) add little red “*” to every required label
 document.addEventListener('DOMContentLoaded', () => {
   const emailInput = document.getElementById('email');
-  const otherControls = Array.from(
+  const others = Array.from(
     document.querySelectorAll(
       '#adventureForm input, #adventureForm textarea, #adventureForm select,' +
       '#addAdventureBtn, #createBookBtn'
     )
   ).filter(el => el.id !== 'email');
 
-  // 1️⃣ disable everything except email
-  otherControls.forEach(el => el.disabled = true);
+  // 1) disable + set tooltip on every non-email control
+  others.forEach(el => {
+    el.disabled = true;
+    el.setAttribute('data-tooltip', 'Please enter a valid email first');
+  });
 
-  // 2️⃣ when email is valid, toggle others
+  // 2) when email is valid, remove disabled + tooltip
   emailInput.addEventListener('input', () => {
-    const valid = emailInput.checkValidity();
-    otherControls.forEach(el => el.disabled = !valid);
+    const ok = emailInput.checkValidity();
+    others.forEach(el => {
+      if (ok) {
+        el.disabled = false;
+        el.removeAttribute('data-tooltip');
+      } else {
+        el.disabled = true;
+        el.setAttribute('data-tooltip', 'Please enter a valid email first');
+      }
+    });
   });
 });
 
