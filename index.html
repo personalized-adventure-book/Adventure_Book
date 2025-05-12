@@ -168,16 +168,12 @@
       z-index: 1000;
     }
 
-/* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
+/* dim disabled controls and allow native title tooltips */
     input:disabled,
     textarea:disabled,
     select:disabled {
-      opacity: 1;                  /* override default dimming */
-      background-color: #fff;      /* keep white background */
+      opacity: 0.5;
       cursor: not-allowed;
-    }
-    input:disabled::placeholder {
-      color: #888;                 /* visible placeholder text */
     }
   </style>
 
