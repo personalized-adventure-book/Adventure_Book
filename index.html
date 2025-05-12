@@ -169,6 +169,16 @@
     }
 
 /* fallback for touch/mobile (if you want custom tooltips, you'd need a JS/CSS tooltip library) */
+    input:disabled,
+    textarea:disabled,
+    select:disabled {
+      opacity: 1;                  /* override default dimming */
+      background-color: #fff;      /* keep white background */
+      cursor: not-allowed;
+    }
+    input:disabled::placeholder {
+      color: #888;                 /* visible placeholder text */
+    }
   </style>
 
 </head>

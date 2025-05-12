@@ -231,6 +231,24 @@ document.querySelectorAll('.adventure-section').forEach((sec, i) => {
 document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Apply initial language
+  const initialLang = localStorage.getItem('adv_lang') || 'en';
+  apply(initialLang);
+
+  // Inject red stars for required fields
+  document.querySelectorAll('input[required], textarea[required], select[required]').forEach(input => {
+    const label = document.querySelector(`label[for="${input.id}"]`);
+    if (label && !label.querySelector('abbr.required')) {
+      const abbr = document.createElement('abbr');
+      abbr.className = 'required';
+      abbr.title = 'required';
+      abbr.setAttribute('data-tooltip', 'Required');
+      abbr.textContent = ' *';
+      label.appendChild(abbr);
+    }
+  });
+
+  // --- Merge: disable everything except the email, and set a title on each
   const emailInput = document.getElementById('email');
   const otherControls = Array.from(
     document.querySelectorAll(
