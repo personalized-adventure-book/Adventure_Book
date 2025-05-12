@@ -229,33 +229,48 @@ document.querySelectorAll('.adventure-section').forEach((sec, i) => {
 }
 
 document.getElementById('langSelect').addEventListener('change', e => apply(e.target.value));
-  // 2) add little red “*” to every required label
+
 document.addEventListener('DOMContentLoaded', () => {
+  // 1) initial language and translations
+  const urlLang     = new URLSearchParams(window.location.search).get('lang');
+  const initialLang = urlLang || 'en';
+  apply(initialLang);
+
+  // 2) add red * to required labels
+  document.querySelectorAll('input[required], textarea[required], select[required]')
+    .forEach(input => {
+      const id = input.id;
+      if (!id) return;
+      const lbl = document.querySelector(`label[for="${id}"]`);
+      if (!lbl || lbl.querySelector('abbr.required')) return;
+      const star = document.createElement('abbr');
+      star.className   = 'required';
+      star.setAttribute('data-tooltip', 'This field is required');
+      star.textContent = '*';
+      lbl.appendChild(star);
+    });
+
+  // 3) lock all except email
   const emailInput = document.getElementById('email');
   const others = Array.from(
     document.querySelectorAll(
-      '#adventureForm input, #adventureForm textarea, #adventureForm select,' +
+      '#adventureForm input, #adventureForm textarea, #adventureForm select, ' +
       '#addAdventureBtn, #createBookBtn'
     )
   ).filter(el => el.id !== 'email');
 
-  // 1) disable + set tooltip on every non-email control
   others.forEach(el => {
     el.disabled = true;
     el.setAttribute('data-tooltip', 'Please enter a valid email first');
   });
 
-  // 2) when email is valid, remove disabled + tooltip
+  // 4) unlock on valid email
   emailInput.addEventListener('input', () => {
     const ok = emailInput.checkValidity();
     others.forEach(el => {
-      if (ok) {
-        el.disabled = false;
-        el.removeAttribute('data-tooltip');
-      } else {
-        el.disabled = true;
-        el.setAttribute('data-tooltip', 'Please enter a valid email first');
-      }
+      el.disabled = !ok;
+      if (ok) el.removeAttribute('data-tooltip');
+      else el.setAttribute('data-tooltip', 'Please enter a valid email first');
     });
   });
 });
