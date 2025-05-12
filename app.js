@@ -259,7 +259,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 1️⃣ disable everything except the email, and set a title on each
   otherControls.forEach(el => {
-    el.disabled = true;
+    // text inputs & textareas: use readOnly so tracking still fires
+    if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
+      el.readOnly = true;
+    } else {
+      // buttons, file inputs, selects: still disable to block
+      el.disabled = true;
+    }
     el.title = 'Please enter a valid email first';
   });
 
@@ -267,7 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
   emailInput.addEventListener('input', () => {
     const ok = emailInput.checkValidity();
     otherControls.forEach(el => {
-      el.disabled = !ok;
+      if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
+        el.readOnly = !ok;
+      } else {
+        el.disabled = !ok;
+      }
       if (ok) {
         el.removeAttribute('title');
       } else {
