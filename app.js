@@ -238,13 +238,19 @@ function apply(lang) {
   if (inst) inst.textContent = t.instructions;
 
   document.querySelectorAll('.adventure-section').forEach((sec, i) => {
-      sec.querySelector('.adventure-title').textContent = `${t.adventure} ${i + 1}`;
-      const span = sec.querySelector('.drop-zone span');
-      if (span) span.textContent = t.dragDrop;
-      const inputs = sec.querySelectorAll('.form-group');
-      if (inputs[0]) inputs[0].querySelector('label').textContent = t.labelAdvName;
-      if (inputs[1]) inputs[1].querySelector('label').textContent = t.labelAdvDesc;
-      if (inputs[2]) inputs[2].querySelector('label').textContent = t.labelAdvImages;
+    const titleEl = sec.querySelector('.adventure-title');
+    if (i === 0) {
+      // first adventure is mandatory: add red star
+      titleEl.innerHTML = `${t.adventure} ${i + 1}<abbr class="required" data-tooltip="Required">*</abbr>`;
+    } else {
+      titleEl.textContent = `${t.adventure} ${i + 1}`;
+    }
+    const span = sec.querySelector('.drop-zone span');
+    if (span) span.textContent = t.dragDrop;
+    const inputs = sec.querySelectorAll('.form-group');
+    if (inputs[0]) inputs[0].querySelector('label').textContent = t.labelAdvName;
+    if (inputs[1]) inputs[1].querySelector('label').textContent = t.labelAdvDesc;
+    if (inputs[2]) inputs[2].querySelector('label').textContent = t.labelAdvImages;
   });
 }
 
