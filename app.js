@@ -308,6 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// Ensure instructions text is always populated on load
+const initialLangOnLoad = new URLSearchParams(window.location.search).get('lang') || 'en';
+apply(initialLangOnLoad);
+
 function preview(files, container) {
   Array.from(files).forEach(file => {
     if (!file.type.startsWith('image/')) return;
