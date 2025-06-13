@@ -66,7 +66,7 @@ en: {
     placeholderAge:     "e.g., 4",
     labelBookLang:      "Book Language",
     placeholderBookLang:"e.g., English, French",
-    instructions: "The more adventures you add, the better we can tailor your book. We recommend adding as many details and images as you'd like — images help bring the story to life!",
+    instructions: "The more adventures you add, the more magical your book becomes. Include as many details and images as you’d like — images help bring the story vividly to life!",
 
     labelCountry: "Country Address", placeholderCountry: "e.g., United States",
     labelCity: "City Address", placeholderCity: "e.g., New York",
@@ -109,7 +109,7 @@ fr: {
     placeholderAge:     "ex. 4",
     labelBookLang:      "Langue du livre",
     placeholderBookLang:"ex. Français, Anglais",
-    instructions: "Plus vous ajoutez d'aventures, mieux nous pourrons personnaliser votre livre. Nous vous recommandons d'ajouter autant de détails et d'images que vous le souhaitez — les images aident à donner vie à l'histoire !",
+    instructions: "Plus vous ajoutez d’aventures, mieux nous pourrons personnaliser votre livre. nous vous conseillons d’ajouter autant de détails et d’images que possible — elles font vivre l’histoire !",
 
     labelCountry: "Adresse du pays", placeholderCountry: "ex. France",
     labelCity: "Adresse de la ville", placeholderCity: "ex. Paris",
@@ -121,7 +121,7 @@ fr: {
     placeholderAdvDesc: "Racontez votre histoire…"
 },
 de: {
-    title: "Erstelle dein Abenteuerbuch",
+    title: "Erwecke die Reisegeschichten deines Kindes zum Leben!",
     subtitle: "Erwecke die Reisegeschichten deines Kindes zum Leben!",
     labelName: "Vollständiger Name", placeholderName: "z.B. Max Mustermann",
     labelEmail: "E-Mail", placeholderEmail: "max@beispiel.de",
@@ -130,7 +130,7 @@ de: {
     placeholderAge:     "z. B. 4",
     labelBookLang:      "Buchsprache",
     placeholderBookLang:"z. B. Deutsch, Englisch",
-    instructions: "Je mehr Abenteuer du hinzufügst, desto besser können wir dein Buch gestalten. Wir empfehlen, so viele Details und Bilder wie möglich hinzuzufügen – Bilder erwecken die Geschichte zum Leben!",
+    instructions: "Je mehr Abenteuer du hinzufügst, desto besser können wir dein Buch personalisieren. Wir empfehlen dir, so viele Details und Bilder wie möglich anzugeben – sie erwecken die Geschichte zum Leben!",
 
     labelCountry: "Landadresse", placeholderCountry: "z.B. Deutschland",
     labelCity: "Stadtadresse", placeholderCity: "z.B. Berlin",
@@ -151,7 +151,7 @@ it: {
     placeholderAge:     "es. 4",
     labelBookLang:      "Lingua del libro",
     placeholderBookLang:"es. Italiano, Inglese",
-    instructions: "Più avventure aggiungi, meglio potremo personalizzare il tuo libro. Ti consigliamo di inserire quanti più dettagli e immagini desideri: le immagini aiutano a rendere la storia ancora più viva!",
+    instructions: "Più avventure aggiungi, più il tuo libro sarà unico! Inserisci quanti più dettagli e immagini possibili: rendono la storia ancora più viva!",
 
     labelCountry: "Indirizzo del paese", placeholderCountry: "es. Italia",
     labelCity: "Indirizzo della città", placeholderCity: "es. Roma",
@@ -172,7 +172,7 @@ ru: {
     placeholderAge:     "напр., 4",
     labelBookLang:      "Язык книги",
     placeholderBookLang:"напр., Русский, Английский",
-    instructions: "Чем больше приключений вы добавите, тем лучше мы сможем персонализировать вашу книгу. Рекомендуем добавлять как можно больше подробностей и изображений — изображения помогают оживить историю!",
+    instructions: "Чем больше приключений вы добавите, тем лучше мы сможем персонализировать вашу книгу. Мы рекомендуем указывать как можно больше деталей и добавлять изображения — они помогут оживить историю!",
 
     labelCountry: "Адрес страны", placeholderCountry: "например, Россия",
     labelCity: "Адрес города", placeholderCity: "например, Москва",
@@ -185,7 +185,7 @@ ru: {
 },
 ar: {
     title: "أنشئ كتاب مغامرتك",
-    subtitle: "أحيّ قصص سفر طفلك!",
+    subtitle: "اجعل قصص سفر طفلك تنبض بالحياة!",
     labelName: "الاسم الكامل", placeholderName: "مثال: محمد علي",
     labelEmail: "البريد الإلكتروني", placeholderEmail: "mohamed@مثال.com",
     labelChildName: "اسم الطفل", placeholderChildName: "مثال: ليلى",
@@ -193,7 +193,7 @@ ar: {
     placeholderAge:     "مثال: 4",
     labelBookLang:      "لغة الكتاب",
     placeholderBookLang:"مثال: العربية، الإنجليزية",
-    instructions: "كلما أضفت مغامرات أكثر، استطعنا تخصيص كتابك بشكل أفضل. ننصحك بإضافة أكبر قدر ممكن من التفاصيل والصور — فالصور تُضفي الحياة على القصة!",
+    instructions: "كلما أضفت مغامرات أكثر، استطعنا تخصيص كتابك بشكل أفضل! ننصحك بإضافة أكبر قدر ممكن من التفاصيل والصور، فكل صورة تجعل القصة تنبض بالحياة أكثر!",
 
     labelCountry: "عنوان الدولة", placeholderCountry: "مثال: مصر",
     labelCity: "عنوان المدينة", placeholderCity: "مثال: القاهرة",
