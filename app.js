@@ -617,4 +617,3 @@ $('createBookBtn').addEventListener('click', () => {
     adventureCount: document.querySelectorAll('.adventure-section').length
   });
 });
-
