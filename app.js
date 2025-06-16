@@ -276,42 +276,42 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- Merge: disable everything except the email, and set a title on each
-  const emailInput = document.getElementById('email');
-  const otherControls = Array.from(
-    document.querySelectorAll(
-      '#adventureForm input, #adventureForm textarea, #adventureForm select, ' +
-      '#addAdventureBtn, #createBookBtn'
-    )
-  ).filter(el => el.id !== 'email');
-
+  // const emailInput = document.getElementById('email');
+  // const otherControls = Array.from(
+  //   document.querySelectorAll(
+  //     '#adventureForm input, #adventureForm textarea, #adventureForm select, ' +
+  //     '#addAdventureBtn, #createBookBtn'
+  //   )
+  // ).filter(el => el.id !== 'email');
+  //
   // 1️⃣ disable everything except the email, and set a title on each
-  otherControls.forEach(el => {
-    // text inputs & textareas: use readOnly so tracking still fires
-    if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
-      el.readOnly = true;
-    } else {
-      // for all other elements, add the 'locked' class to visually lock them
-      el.classList.add('locked');
-    }
-    el.title = 'Please enter a valid email first';
-  });
-
+  // otherControls.forEach(el => {
+  //   // text inputs & textareas: use readOnly so tracking still fires
+  //   if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
+  //     el.readOnly = true;
+  //   } else {
+  //     // for all other elements, add the 'locked' class to visually lock them
+  //     el.classList.add('locked');
+  //   }
+  //   el.title = 'Please enter a valid email first';
+  // });
+  //
   // 2️⃣ watch email validity: toggle disabled + title
-  emailInput.addEventListener('input', () => {
-    const ok = emailInput.checkValidity();
-    otherControls.forEach(el => {
-      if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
-        el.readOnly = !ok;
-      } else {
-        el.classList.toggle('locked', !ok);
-      }
-      if (ok) {
-        el.removeAttribute('title');
-      } else {
-        el.title = 'Please enter a valid email first';
-      }
-    });
-  });
+  // emailInput.addEventListener('input', () => {
+  //   const ok = emailInput.checkValidity();
+  //   otherControls.forEach(el => {
+  //     if ((el.tagName === 'INPUT' && el.type !== 'file') || el.tagName === 'TEXTAREA') {
+  //       el.readOnly = !ok;
+  //     } else {
+  //       el.classList.toggle('locked', !ok);
+  //     }
+  //     if (ok) {
+  //       el.removeAttribute('title');
+  //     } else {
+  //       el.title = 'Please enter a valid email first';
+  //     }
+  //   });
+  // });
 
   // ─── Initialize existing (static) adventure-section drop-zones ───
   document.querySelectorAll('.adventure-section').forEach(sec => {
