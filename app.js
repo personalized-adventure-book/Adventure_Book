@@ -20,21 +20,28 @@ function getSessionId() {
 }
 const sessionId = getSessionId();
 
-// ─── Human detection: only start tracking after user scrolls ───
+// ─── Human detection: start tracking after scroll, focus, or input ───
 let humanDetected = false;
-function onScrollDetect() {
-  if (window.scrollY > 100 && !humanDetected) {
+function detectHuman() {
+  if (!humanDetected) {
     humanDetected = true;
-    trackEvent('scrollDetected');
+    trackEvent('humanDetected');
     window.removeEventListener('scroll', onScrollDetect);
+    document.removeEventListener('focusin', detectHuman);
+    document.removeEventListener('input', detectHuman);
   }
 }
+function onScrollDetect() {
+  if (window.scrollY > 100) detectHuman();
+}
 window.addEventListener('scroll', onScrollDetect);
-// ─────────────────────────────────────────────────────────────────
+document.addEventListener('focusin', detectHuman);
+document.addEventListener('input', detectHuman);
+// ───────────────────────────────────────────────────────────────────────
 
 function trackEvent(eventType, details = {}) {
   // Skip tracking until human interaction detected
-  if (!humanDetected && eventType !== 'scrollDetected') {
+  if (!humanDetected && eventType !== 'humanDetected') {
     return;
   }
   const payload = { sessionId, eventType, details };
