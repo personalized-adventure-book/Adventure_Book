@@ -62,7 +62,7 @@ function trackEvent(eventType, details = {}) {
 
 // ▶︎ visitor‐counter ping
 window.addEventListener('load', () => {
-    detectHuman();
+    // detectHuman(); // Removed automatic human detection on page load
     console.log("i entered");
     fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
       method: 'GET',
