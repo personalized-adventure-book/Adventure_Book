@@ -25,6 +25,9 @@ let humanDetected = false;
 function detectHuman() {
   if (!humanDetected) {
     humanDetected = true;
+    // Track the page language on first human interaction
+    const urlLang = new URLSearchParams(window.location.search).get('lang') || 'en';
+    trackEvent('language', { lang: urlLang });
   }
 }
 function onScrollDetect() {
