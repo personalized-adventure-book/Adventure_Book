@@ -20,7 +20,23 @@ function getSessionId() {
 }
 const sessionId = getSessionId();
 
+// ─── Human detection: only start tracking after user scrolls ───
+let humanDetected = false;
+function onScrollDetect() {
+  if (window.scrollY > 100 && !humanDetected) {
+    humanDetected = true;
+    trackEvent('scrollDetected');
+    window.removeEventListener('scroll', onScrollDetect);
+  }
+}
+window.addEventListener('scroll', onScrollDetect);
+// ─────────────────────────────────────────────────────────────────
+
 function trackEvent(eventType, details = {}) {
+  // Skip tracking until human interaction detected
+  if (!humanDetected && eventType !== 'scrollDetected') {
+    return;
+  }
   const payload = { sessionId, eventType, details };
   const url = 'https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec';
   const payloadStr = JSON.stringify(payload);
