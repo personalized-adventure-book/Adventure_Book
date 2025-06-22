@@ -20,28 +20,26 @@ function getSessionId() {
 }
 const sessionId = getSessionId();
 
-// ─── Human detection: start tracking after scroll, focus, or input ───
+// ─── Human detection: only start tracking after user scrolls ───
 let humanDetected = false;
 function detectHuman() {
   if (!humanDetected) {
     humanDetected = true;
-    trackEvent('humanDetected');
-    window.removeEventListener('scroll', onScrollDetect);
-    document.removeEventListener('focusin', detectHuman);
-    document.removeEventListener('input', detectHuman);
   }
 }
 function onScrollDetect() {
-  if (window.scrollY > 100) detectHuman();
+  if (window.scrollY > 100 && !humanDetected) {
+    detectHuman();
+    trackEvent('scroll', { scrollY: window.scrollY });
+    window.removeEventListener('scroll', onScrollDetect);
+  }
 }
 window.addEventListener('scroll', onScrollDetect);
-document.addEventListener('focusin', detectHuman);
-document.addEventListener('input', detectHuman);
-// ───────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────
 
 function trackEvent(eventType, details = {}) {
   // Skip tracking until human interaction detected
-  if (!humanDetected && eventType !== 'humanDetected') {
+  if (!humanDetected) {
     return;
   }
   const payload = { sessionId, eventType, details };
@@ -64,6 +62,7 @@ function trackEvent(eventType, details = {}) {
 
 // ▶︎ visitor‐counter ping
 window.addEventListener('load', () => {
+    detectHuman();
     console.log("i entered");
     fetch('https://script.google.com/macros/s/AKfycbyUMrzt00F9K9qNwedqO43LoY26MREwdp-SVfF4JLVFqYqTiKUa5oStVLrjQ44f81ylEQ/exec', {
       method: 'GET',
@@ -552,6 +551,7 @@ const form = document.getElementById('adventureForm');
 form.addEventListener('focusin', e => {
   const t = e.target;
   if (t.matches('input, textarea, select')) {
+    detectHuman();
     trackEvent('focus', {
       field: t.name || t.id,
       section: getSectionIndex(t)
@@ -578,6 +578,7 @@ form.addEventListener('input', e => {
     details.value = val;
   }
 
+  detectHuman();
   trackEvent('input', details);
 });
 
